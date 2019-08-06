@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('common/head'); %>
+  <title><%= title %></title>
+</head>
+<body>
+  <%- include('common/header'); %>
+  <div class="container">
+    <div class="row">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>Tên phim</th>
+            <th>Đạo diễn</th>
+            <th>Xuất xứ</th>
+            <th>Năm phát hành</th>
+            <th>Thời gian lưu</th>
+            <th>Xem</th>
+            <th>Cập nhật</th>
+            <th>Xoá</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (var i = 0; i < movies.length; i++) { -%>
+            <tr class="item-id-<%= movies[i].id %>">
+              <td><%= movies[i].title %></td>
+              <td><%= movies[i].doctor %></td>
+              <td><%= movies[i].country %></td>
+              <td><%= movies[i].year %></td>
+              <td><%= moment(movies[i].meta.updateAt).format('MM/DD/YYYY')%></td>
+              <td>
+                <a target="_blank" href="../movie/<%= movies[i].id%>">Xem</a>
+              </td>
+              <td>
+                <a target="_blank" href="/admin/update/<%= movies[i].id%>">Sửa đổi</a>
+              </td>
+              <td>
+                <button class="btn btn-danger del" type="button" 
+                data-id="<%=movies[i].id%>">Xóa</button>
+              </td>
+            </tr>
+          <% } -%>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 引入删除的ajax的请求 -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>

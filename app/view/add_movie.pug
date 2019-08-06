@@ -1,0 +1,65 @@
+extends ./layout
+
+block content
+    .row
+        form.form-horizontal(method="post", action="/admin/new")
+            input(type="hidden", name="movie[_id]", value=movie._id)
+            .form-group
+                label.col-sm-2.control-label(for="inputTitle") Tên phim
+                .col-sm-10
+                    input#inputTitle.form-control(type="text", name="movie[title]", value=movie.title)
+            .form-group
+                label.col-sm-2.control-label(for="inputTitleVn") Tên tiếng việt
+                .col-sm-10
+                    input#inputTitle.form-control(type="text", name="movie[titleVN]", value=movie.titleVN)
+            .form-group
+                label.col-sm-2.control-label(for="inputDoctor") Đạo diễn
+                .col-sm-10
+                    input#inputDoctor.form-control(type="text", name="movie[doctor]", value=movie.doctor)
+            .form-group
+                label.col-sm-2.control-label(for="inputCountry") Xuất xứ
+                .col-sm-10
+                    input#inputCountry.form-control(type="text", name="movie[country]", value=movie.country)
+            .form-group
+                label.col-sm-2.control-label(for="inputLanguage") Ngôn ngữ
+                .col-sm-10
+                    input#inputLanguage.form-control(type="text", name="movie[language]", value=movie.language)
+            .form-group
+                label.col-sm-2.control-label(for="inputPoster") Ảnh đại diện
+                .col-sm-10
+                    input#inputPoster.form-control(type="text", name="movie[poster]", value=movie.poster)
+            .form-group
+                label.col-sm-2.control-label(for="inputGroup") Thuộc nhóm
+                .col-sm-10
+                 select#inputType.inputCategory(name="movie[group]")
+                    each variable in group
+                        option(value=variable.id, selected=movie.group==variable) #{variable.name}
+            .form-group
+                label.col-sm-2.control-label(for="inputType") Thuộc loại
+                .col-sm-10
+                 select#inputCategory.inputCategory(name="movie[type]")
+                    each variable in type
+                        option(value=variable.id, selected=movie.type==variable) #{variable.name}                
+            .form-group
+                label.col-sm-2.control-label(for="inputCategory") Thể loại
+                .col-sm-10
+                 select#inputCategory.inputCategory(name="movie[category]")
+                    each variable in category
+                        option(value=variable._id, selected=movie.category==variable) #{variable.name}
+                    
+            .form-group
+                label.col-sm-2.control-label(for="inputYear") Năm phát hành
+                .col-sm-10
+                    input#inputYear.form-control(type="text", name="movie[year]", value=movie.year)
+            .form-group
+                label.col-sm-2.control-label(for="inputSummary") Giới thiệu phim
+                .col-sm-10
+                    input#inputSummary.form-control(type="text", name="movie[summary]", value=movie.summary)
+            .form-group
+                .col-sm-offset-6.col-sm-9
+                    button.btn.btn-success(type="submit") Lưu        
+        script(src="/javascripts/movie.js")
+       
+    
+
+    

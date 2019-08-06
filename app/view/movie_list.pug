@@ -1,0 +1,43 @@
+extends ./layout
+
+block content
+    .row
+        table.table.table-hover.table-bordered
+            thead
+                tr
+                    th Tên phim
+                    th Tên tiếng video
+                    th Xuất xứ
+                    th Ngôn ngữ
+                    th Năm phát hành
+                    th Thời gian thêm vào
+                    th Thời gian cập nhật
+                    th Số tập
+                    th
+                    th 
+                    th 
+                    th 
+            tbody
+                each item in movies
+                    tr(class="item-id-" + item._id)
+                        td 
+                            a(target="_blank", href="/detail/" + item._id, ) #{item.title}
+                        td 
+                            a(target="_blank", href="/detail/" + item._id, ) #{item.titleVN}
+                        td= item.country
+                        td= item.language
+                        td= item.year
+                        td= moment(item.meta.createAt).format('DD-MM-YYYY H:mm')
+                        td= moment(item.meta.updateAt).format('DD-MM-YYYY H:mm')
+                        td= item.episodes.length
+                        td
+                            a(target="_blank", href="/admin/episodes_list/" + item._id) Tập
+                        td
+                            a(target="_blank", href="/admin/add_episodes/" + item._id) Thêm tập
+                        //- td
+                        //-     button.btn.btn-success#add_episodes(type="button", data-id = item._id) Thêm tập
+                        td
+                            a(target="_blank", href="/admin/movie_update/" + item._id) Sửa
+                        td
+                           a(target="_blank", href="#") Xoá
+    script(src="/javascripts/deleteMovie.js")

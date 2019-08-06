@@ -1,0 +1,71 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img src="/images/logo.png" alt="Brand" width="149" height="40"></a>
+
+        </div> 
+        <div class="navbar-collapse collapse" role="navigation">
+            if user && user.role > 99
+                <ul class="nav navbar-nav">
+                    //- <li class="hidden-sm"><a href="/">Trang chủ</a></li>
+                    <li><a href="">Cá nhân</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Quản lý <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header">Quản lý thể loại</li>
+                            <li><a href="/admin/add_category">Thể loại phim</a></li>
+                            <li><a href="/admin/category_list">Danh sách thể loại</a></li>
+                            <li><a href="/admin/add_groud">Thêm nhóm</a></li>
+                            <li><a href="/admin/add_type">Thêm loại anime</a></li>
+                            <li role="separator" class="divider"></li>
+
+                            <li class="dropdown-header">Quản lý phim</li>
+                            <li><a href="/admin/add_movie">Thêm phim</a></li>
+                            <li><a href="/admin/movie_list">Danh sách phim</a></li>
+                            <li role="separator" class="divider"></li>
+
+                            <li class="dropdown-header">Quản lý user</li>
+                            <li><a href="/admin/add_user">Thêm user</a></li>
+                            <li><a href="/admin/user_list">Danh sách user</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            if types            
+                <ul class="nav navbar-nav" id="navSearch">
+                    <form class="navbar-form" id="search" role="search">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Tìm Anime" aria-label="Search">
+                        <div class="dropdown" style=" display: inline-block;">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <span id="txtType">Tất cả</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                each item in types               
+                                    <li><a href="#">#{item.name}</a></li>                            
+                            </ul>
+                        </div>
+                        <button id="dropdownMenu2" class="btn btn-outline-info my-2 my-sm-0" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </form>
+                </ul>
+            <ul class="nav navbar-nav navbar-right">
+                if user
+                    <li><a>Chào mừng bạn：#{user.name}</a></li>
+                    <li><a href="/user_logout">Đăng xuất</a></li>
+                else
+                    <li><a href="/signin">Đăng nhập</a></li>
+                    <li><a href="/signup">Đăng ký</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+//- 后台
+//- 电影管理（电影录入、电影列表）
+//- 用户管理（用户录入、用户列表）

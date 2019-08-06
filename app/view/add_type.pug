@@ -1,0 +1,16 @@
+extends ./layout
+
+block content
+    .row
+        form.form-horizontal(method="post", action="/admin/save_type")
+            .form-group
+                label.col-sm-2.control-label(for="id") Mã nhóm
+                .col-sm-10
+                    input#name.form-control(type="text", name="type[id]", value=type.id)
+            .form-group
+                label.col-sm-2.control-label(for="name") Phân nhóm
+                .col-sm-10
+                    input#name.form-control(type="text", name="type[name]", value=type.name)
+            .form-group
+                .col-sm-offset-6.col-sm-9
+                    button.btn.btn-success(type="submit") Lưu

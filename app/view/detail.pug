@@ -5,7 +5,14 @@ block content
     .row.row-eq-height
         .col-md-8
             //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")
-            <iframe id="player" frameborder="0" allowfullscreen  quality="high", width="100%", height="450" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1"></iframe>
+           
+          video#my-video.video-js(controls='' preload='auto' width='640' height='360' poster='MY_VIDEO_POSTER.jpg' data-setup='{}')
+            source(src='<?php echo $src[0]?>' type='video/mp4')
+            p.vjs-no-js
+              | B&#x1EA1;n ph&#x1EA3;i b&#x1EAD;t javascript &dstrok;&#x1EC3; xem video n&agrave;y, v&agrave; n&acirc;ng c&#x1EA5;p tr&igrave;nh duy&#x1EC7;t 
+              a(href='http://videojs.com/html5-video-support/' target='_blank') h&#x1ED7; tr&#x1EE3; HTML5 video
+
+
 
 
             //- 评论

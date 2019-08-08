@@ -1,5 +1,5 @@
 $(document).ready(function(){
     debugger
-    var url = $('#urlHidden').val();
-    $('#player').attr('src', url)
+    //var url = $('#urlHidden').val();
+    //$('#player').attr('src', url)
   })

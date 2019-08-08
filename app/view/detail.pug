@@ -6,15 +6,8 @@ block content
         .col-md-8
             //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")
            
-          video#my-video.video-js(controls='' preload='auto' width='640' height='360' poster='MY_VIDEO_POSTER.jpg' data-setup='{}')
-            source(src='<?php echo $src[0]?>' type='video/mp4')
-            p.vjs-no-js
-              | B&#x1EA1;n ph&#x1EA3;i b&#x1EAD;t javascript &dstrok;&#x1EC3; xem video n&agrave;y, v&agrave; n&acirc;ng c&#x1EA5;p tr&igrave;nh duy&#x1EC7;t 
-              a(href='http://videojs.com/html5-video-support/' target='_blank') h&#x1ED7; tr&#x1EE3; HTML5 video
-
-
-
-
+            video#my-video.video-js(controls='' preload='auto' width='640' height='360' data-setup='{}')
+              source(src='https://drive.google.com/uc?export=download&id=1pR46GbcgJjS62euGB0h7qG-FLUvbqv9u>' type='video/mp4')
             //- 评论
             //- .panel.panel-defatul
             //-   .panel-heading
@@ -83,3 +76,5 @@ block content
               li #{item.name}
         #profile.tab-pane(role='tabpanel') ...        
     script(src="/javascripts/detail.js")
+    link(href='http://vjs.zencdn.net/5.7.1/video-js.css' rel='stylesheet')
+    script(src='http://vjs.zencdn.net/5.7.1/video.js')

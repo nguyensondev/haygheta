@@ -11,20 +11,25 @@ const userController = require('../app/controller/user');
 const commentController = require('../app/controller/comment');
 const categoryController = require('../app/controller/category');
 
-module.exports = function(app) {
+module.exports = function (app) {
     /**
      * pre handle user
      * 不推荐使用 app.locals.user = req.session.user; 避免别的客户端也拿到了 user，造成环境污染
      * user 的 session 信息存放在 res.locals 中变成本次生命周期变量，在每个模板页面中都能拿到，不用每次都用 render 传递 user
      */
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         res.locals.user = req.session.user;
+        res.setHeader('Access-Control-Allow-Origin', '*');
+
+        // Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
         next();
     });
 
     // index
     app.get('/', indexController.index);
-    
+
     // movie
     app.get('/detail/:id', movieController.detail);
     app.get('/admin/add_type', userController.user_req, userController.admin_req, movieController.add_type);
@@ -34,6 +39,7 @@ module.exports = function(app) {
     app.get('/admin/episodes_list/:id', userController.user_req, userController.admin_req, movieController.episodes_list);
     app.get('/admin/add_episodes/:id', userController.user_req, userController.admin_req, movieController.add_episodes);
     app.post('/admin/save_episodes', userController.user_req, userController.admin_req, movieController.save_episodes);
+    app.post('/admin/upload_episodes', userController.user_req, userController.admin_req, movieController.upload_episodes);
     app.get('/admin/add_movie', userController.user_req, userController.admin_req, movieController.add_movie);
     app.post('/admin/new', userController.user_req, userController.admin_req, movieController.movie_save);
     app.get('/admin/movie_list', userController.user_req, userController.admin_req, movieController.movie_list);

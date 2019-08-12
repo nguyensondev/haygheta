@@ -1,17 +1,86 @@
 extends ./layout
 
 block content
+     
     .row
-        form.form-horizontal(method="post", action="/admin/save_episodes")
-            input(type="hidden", name="episodes[movieID]", value=id)
-            .form-group
-                label.col-sm-2.control-label(for="inputTitle") Tên tập
-                .col-sm-10
-                    input#inputTitle.form-control(type="text", name="episodes[name]", value="")            
-            .form-group
-                label.col-sm-2.control-label(for="inputSummary") Url
-                .col-sm-10
-                    input#inputSummary.form-control(type="text", name="episodes[url]", value="")
-            .form-group
-                .col-sm-offset-6.col-sm-9
-                    button.btn.btn-success(type="submit") Lưu
+        input#movieID(type="hidden" value=id)
+        div#tabDetail
+        // Nav tabs
+        ul.nav.nav-tabs(role='tablist')
+            li.active(role='presentation')
+                a(href='#home', aria-controls='home', role='tab', data-toggle='tab') Đã up
+            li(role='presentation')
+                a(href='#profile', aria-controls='profile', role='tab', data-toggle='tab') Up mới        
+        // Tab panes
+        .tab-content
+            #home.tab-pane.active(role='tabpanel') 
+                form.form-horizontal(method="post", action="/admin/save_episodes")
+                    input(type="hidden", name="episodes[movieID]", value=id)
+                    .form-group
+                        label.col-sm-2.control-label(for="inputTitle") Tên tập
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputTitle.form-control(type="text", name="episodes[name]", value=_episodes.name)
+                            else  
+                                input#inputTitle.form-control(type="text", name="episodes[name]", value="")
+                                        
+                    .form-group
+                        label.col-sm-2.control-label(for="inputSummary") Url
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputSummary.form-control(type="text", name="episodes[url]", value=_episodes.url)
+                            else  
+                                input#inputSummary.form-control(type="text", name="episodes[url]", value="")
+                            
+                    if _episodes !== undefined
+                        .form-group
+                            label.col-sm-2.control-label(for="inputCapcha") Capcha
+                            .col-sm-10
+                                img#imgCapcha(src=_episodes.capcha)
+                                input#inputCapcha.form-control(type="text", name="episodes[capcha]", value="") 
+                    .form-group
+                        .col-sm-offset-6.col-sm-9
+                            if _episodes !== undefined
+                                button.btn.btn-success(type="submit" name="btnSuccess") Cập Nhật
+                            else  
+                                button.btn.btn-success(type="submit" name="btnSuccess") Lưu               
+            #profile.tab-pane(role='tabpanel') 
+                    form#fileinfo(method="post" name = "fileinfo" action="/admin/upload_episodes" enctype="multipart/form-data")
+                        input#basicUploadFile(type='file' name='fileUploaded')
+                        button#btnUploadAnime(type='submit' name="btnUploadAnime")
+                            | Upload anime
+                        .progress
+                            .progress-bar.progress-bar-striped(role='progressbar' aria-valuenow='80' aria-valuemin='0' aria-valuemax='100' style='width:80%')
+                                | 80%
+    script(src='/javascripts/add_episodes.js')
+        //- form.form-horizontal(method="post", action="/admin/save_episodes")
+        //-     input(type="hidden", name="episodes[movieID]", value=id)
+        //-     .form-group
+        //-         label.col-sm-2.control-label(for="inputTitle") Tên tập
+        //-         .col-sm-10
+        //-             if _episodes !== undefined
+        //-                 input#inputTitle.form-control(type="text", name="episodes[name]", value=_episodes.name)
+        //-             else  
+        //-                 input#inputTitle.form-control(type="text", name="episodes[name]", value="")
+                                
+        //-     .form-group
+        //-         label.col-sm-2.control-label(for="inputSummary") Url
+        //-         .col-sm-10
+        //-             if _episodes !== undefined
+        //-                 input#inputSummary.form-control(type="text", name="episodes[url]", value=_episodes.url)
+        //-             else  
+        //-                 input#inputSummary.form-control(type="text", name="episodes[url]", value="")
+                    
+        //-     if _episodes !== undefined
+        //-         .form-group
+        //-             label.col-sm-2.control-label(for="inputCapcha") Capcha
+        //-             .col-sm-10
+        //-                 img#imgCapcha(src=_episodes.capcha)
+        //-                 input#inputCapcha.form-control(type="text", name="episodes[capcha]", value="") 
+        //-     .form-group
+        //-         .col-sm-offset-6.col-sm-9
+        //-             if _episodes !== undefined
+        //-                 button.btn.btn-success(type="submit") Cập Nhật
+        //-             else  
+        //-                 button.btn.btn-success(type="submit") Lưu
+    

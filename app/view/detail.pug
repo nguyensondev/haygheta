@@ -2,12 +2,14 @@ extends ./layout
 
 block content
     input(type="hidden", id="urlHidden", value=defaultURl)
+    input(type="hidden", id="urlThumnalHidden", value=thumnailURL)
     .row.row-eq-height
         .col-md-8
-            //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")
-           
-            video#my-video.video-js(controls='' preload='auto' width='640' height='360' data-setup='{}')
-              source(src='https://drive.google.com/uc?export=download&id=1pR46GbcgJjS62euGB0h7qG-FLUvbqv9u>' type='video/mp4')
+            //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")           
+            #player_haygheta
+
+
+                
             //- 评论
             //- .panel.panel-defatul
             //-   .panel-heading
@@ -75,6 +77,6 @@ block content
             each item in episodes
               li #{item.name}
         #profile.tab-pane(role='tabpanel') ...        
-    script(src="/javascripts/detail.js")
-    link(href='http://vjs.zencdn.net/5.7.1/video-js.css' rel='stylesheet')
-    script(src='http://vjs.zencdn.net/5.7.1/video.js')
+    
+    
+    script(src='/javascripts/detail.js')

@@ -10,6 +10,8 @@ let episodesSchema = new mongoose.Schema({
     },
     url: {type: String},
     urlThumnail: {type: String},
+    capcha: {type: String},
+    view: {type: Number},
     meta: {
         createAt: {
             type: Date,

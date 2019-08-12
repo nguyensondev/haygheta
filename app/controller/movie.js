@@ -8,7 +8,7 @@
 /**
  * 处理电影控制逻辑
  */
-
+var formidable = require('formidable');
 const movieModel = require('../model/mongoose/model/movieModel');
 const categoryModel = require('../model/mongoose/model/categoryModel');
 const episodesModel = require('../model/mongoose/model/episodesModel');
@@ -16,6 +16,11 @@ const commentModel = require('../model/mongoose/model/commentModel');
 const groupModel = require('../model/mongoose/model/groupModel');
 const typeModel = require('../model/mongoose/model/typeModel');
 const _ = require('underscore');
+const openload = require('node-openload');
+const ol = openload({
+    api_login: "25c363bb39ee91f2",
+    api_key: "UmUrpthb",
+});
 
 // GET detail page.
 exports.detail = function (req, res) {
@@ -31,14 +36,17 @@ exports.detail = function (req, res) {
                 console.log(err);
             }
             let defaultURl = ""
-            if(episodes.length>0){
-                defaultURl = episodes[episodes.length-1].url
+            let thumnail = ""
+            if (episodes.length > 0) {
+                defaultURl = episodes[episodes.length - 1].url
+                thumnail = episodes[episodes.length - 1].urlThumnail
             }
             res.render('detail', {
                 title: 'Trang chi tiết phim',
                 movie: movie,
                 episodes: episodes,
-                defaultURl:defaultURl
+                defaultURl: defaultURl,
+                thumnailURL: thumnail
             });
         });
         // commentModel.find({ movie: id }, function (err, comments) {
@@ -65,6 +73,34 @@ exports.add_episodes = function (req, res) {
         title: 'Trang thêm tập phim',
         id: id
     });
+};
+exports.upload_episodes = function (req, res) {
+    // 取到 url '/detail/:id' 中的 id
+
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        //var oldpath = files.filetoupload.path;
+        console.log(files.fileUploaded.path);
+        ol.upload({
+            file: files.fileUploaded.path
+        }, (result) => {
+            res.setHeader('Content-Type', 'application/json');
+            //console.log(result);
+            res.send({ result: result.percent });
+        }).then(data => {
+            /*
+            {   name: 'upload_30a5a1034c54130a075c424c4675ff00',
+                size: '383631',
+                sha1: '5c5a07267317b166a218e5edb7667ccd2b5351be',
+                content_type: 'video/mp4',
+                id: 'hmWnolACq-A',
+                url:
+                'https://openload.co/f/hmWnolACq-A/upload_30a5a1034c54130a075c424c4675ff00' } 
+             */
+            console.log(data);
+        })
+    });
+
 };
 // save_episodes page - post
 exports.save_type = function (req, res) {
@@ -97,19 +133,84 @@ exports.save_group = function (req, res) {
 // save_episodes page - post
 exports.save_episodes = function (req, res) {
     let _episodes = req.body.episodes;
-    //console.log(_episodes); // { name: '普通分类' }
-    let temp = _episodes.url.replace(/\s/g, '')     
-    let array = temp.toString().split(',')    
-    _episodes["url"] = array
-    let episodes = new episodesModel(_episodes);
+    // let temp = _episodes.url.replace(/\s/g, '')
+    // let array = temp.toString().split(',')
+    // _episodes["url"] = array
+    // let episodes = new episodesModel(_episodes);
 
-    episodes.save(function (err, epi) {
-        if (err) {
-            console.log(err);
-        }
+    // episodes.save(function (err, epi) {
+    //     if (err) {
+    //         console.log(err);
+    //     }
 
-        res.redirect(req.get('referer'));
-    });
+    //     res.redirect(req.get('referer'));
+    // });
+    let temp = _episodes.url.replace(/\s/g, '')
+    let array = temp.toString().split('/')
+    if (array && array.length > 0) {
+        let id = array[4]
+        console.log("id ", id);
+        ol.getDownloadTicket(id).then(info => {
+            console.log(info)
+            if (info) {
+                // nếu không yêu cầu capcha thì call api lấy link phim non catcha
+                if (!info.captcha_url) {
+                    ol.getDownloadLink({
+                        file: id,
+                        ticket: info.ticket,
+
+                    })
+                        .then(data => {
+                            // lưu link lấy được vào database
+                            if (data) {
+                                _episodes.url = data.url
+                                let episodes = new episodesModel(_episodes);
+                                console.log("cuoi cung", episodes);
+                                episodes.save(function (err, epi) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                    res.redirect(req.get('referer'));
+                                })
+                            }
+                        });
+                }
+                else if (_episodes.capcha != null) {
+                    // vall api với capcha và lưu lại
+                    ol.getDownloadLink({
+                        file: id,
+                        ticket: info.ticket,
+                        captcha_response: _episodes.capcha
+                    })
+                        .then(data => {
+                            // lưu link lấy được vào database
+                            if (data) {
+                                _episodes.url = data.url
+                                let episodes = new episodesModel(_episodes);
+                                console.log("cuoi cung capcha", episodes);
+                                episodes.save(function (err, epi) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                    res.redirect(req.get('referer'));
+                                })
+                            }
+                        });
+                }
+                else {
+                    // hiện trang có capcha để nhập
+                    _episodes.capcha = info.captcha_url//'https://openload.co/dlcaptcha/t7PsyNwD701iirn2.png'//info.captcha_url
+                    res.render('add_episodes', {
+                        title: 'Trang thêm tập phim',
+                        id: _episodes.movieID,
+                        _episodes: _episodes
+                    });
+                }
+            }
+        });
+    }
+
+
 };
 
 // GET add_movie page.
@@ -140,32 +241,32 @@ exports.add_movie = function (req, res) {
                         language: 'Tiếng anh'
                     },
                     category: categorys,
-                    group:groups,
-                    type:types
+                    group: groups,
+                    type: types
                 });
             })
         })
-        
+
     });
 
 };
 
-exports.add_group = function(req, res) {
+exports.add_group = function (req, res) {
     res.render('add_group', {
         title: 'Trang nhập nhóm',
         group: {
             name: 'Thể loại chung',
-            id:1
+            id: 1
         }
     });
 };
 
-exports.add_type = function(req, res) {
+exports.add_type = function (req, res) {
     res.render('add_type', {
         title: 'Trang nhập loại anime',
         type: {
             name: 'Thể loại chung',
-            id:1
+            id: 1
         }
     });
 };
@@ -205,8 +306,8 @@ exports.movie_save = function (req, res) {
             flash: movieObj.flash,
             summary: movieObj.summary,
             titleVN: movieObj.titleVN,
-            group:  movieObj.group,
-            type:  movieObj.type
+            group: movieObj.group,
+            type: movieObj.type
         });
 
         postMovie.save(function (err, movie) {
@@ -222,7 +323,7 @@ exports.movie_save = function (req, res) {
 
 // GET movie-list page.
 exports.movie_list = function (req, res) {
-    
+
     movieModel.findAll(function (err, movies) {
         if (err) {
             console.log(err);
@@ -241,10 +342,10 @@ exports.episodes_list = function (req, res) {
     //let id = "5d37cd39a3c15527bcc61a17";   
     episodesModel.find({
         "movieID": id
-    } ,function (err, epi) {
+    }, function (err, epi) {
         if (err) {
             console.log(err);
-        }        
+        }
         res.render('episodes_list', {
             title: 'Trang quản lý danh sách tập',
             episodes: epi

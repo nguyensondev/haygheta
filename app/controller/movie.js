@@ -59,7 +59,26 @@ exports.get_a_episode = function (req, res) {
         }
 
     })
-    
+
+}
+
+exports.get_link_episode = function (req, res) {
+    let id =req.params.id
+    let ticket =req.params.ticket
+    ol.getDownloadLink({
+        file: id,
+        ticket: ticket,
+    })
+        .then(data2 => {            
+            if (data2) {
+                return res.status(200).send({
+                    success: 'true',
+                    message: 'get successfully',
+                    data: data2.url
+                })                
+            }
+        });
+
 }
 
 // GET detail page.

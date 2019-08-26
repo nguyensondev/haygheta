@@ -18,9 +18,9 @@ $(document).ready(function () {
     console.log(episodesID)
     $.ajax({
       type: "GET",
-      url: '/admin/get_a_episode/'+episodesID,
-      
-      success:function(response) {
+      url: '/admin/get_a_episode/' + episodesID,
+
+      success: function (response) {
         jwplayer("player_haygheta").setup({
           image: response.data.urlThumnail,
           file: response.data.url,
@@ -29,13 +29,13 @@ $(document).ready(function () {
           aspectratio: "16:9"
         });
       },
-      error:function(err){
+      error: function (err) {
         console.log(err)
       }
     });
   }
   //$('#player').attr('src', url)
-  
+
 
   window.adblock = false;
   window.adblock2 = false;
@@ -46,7 +46,26 @@ $(document).ready(function () {
   //
 
 })
-
+function UrlExists(response) {
+  jQuery.ajax({
+    url: response.data.url,
+    dataType: 'text',
+    type: 'GET',
+    error: function () {
+      console.log("link khong ton tai")
+    },
+    success: function () {
+      console.log("link co ton tai")
+      jwplayer("player_haygheta").setup({
+        image: response.data.urlThumnail,
+        file: response.data.url,
+        //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
+        width: "100%",
+        aspectratio: "16:9"
+      });
+    }
+  });
+}
 function onready(fn) { if (document.readyState != 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
 
 onready(function () {

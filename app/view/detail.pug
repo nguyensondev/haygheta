@@ -3,6 +3,7 @@ extends ./layout
 block content
     input(type="hidden", id="urlHidden", value=defaultURl)
     input(type="hidden", id="urlThumnalHidden", value=thumnailURL)
+    input(type="hidden", id="episodesID", value=episodesID)
     .row.row-eq-height
         .col-md-8
             //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")           
@@ -73,9 +74,10 @@ block content
       // Tab panes
       .tab-content
         #home.tab-pane.active(role='tabpanel') 
-          ul.list-inline
+          ul.list-episode
             each item in episodes
-              li #{item.name}
+              li.episode(data-link=item.url) 
+                a.btn-episode.btn3d.black(title=item.name data-episode-id=episodesID data-num='1' data-type='watch' href="/detail/" + item.movieID +"/"+item._id) #{item.name}
         #profile.tab-pane(role='tabpanel') ...        
     
     

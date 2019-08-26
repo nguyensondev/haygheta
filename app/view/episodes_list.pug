@@ -6,7 +6,7 @@ block content
             thead
                 tr
                     th Tên tập                                      
-                    th Thời gian thêm vào
+                    th Hình Thumnail
                     th Thời gian cập nhật
                     th Link
                     th
@@ -15,11 +15,12 @@ block content
                 each item in episodes
                     tr(class="item-id-" + item._id)                       
                         td= item.name                       
-                        td= moment(item.meta.createAt).format('DD-MM-YYYY H:mm')
+                        td 
+                            img(src=item.urlThumnail height=80 width=60)
                         td= moment(item.meta.updateAt).format('DD-MM-YYYY H:mm')
-                        td                       
+                        td= item.url                       
                         td
-                            a(target="_blank", href="/admin/movie_update/" + item._id) Sửa
+                            a(target="_blank", href="/admin/update_episodes/" + item._id) Sửa
                         td
                            a(target="_blank", href="#") Xoá
     script(src="/javascripts/deleteMovie.js")

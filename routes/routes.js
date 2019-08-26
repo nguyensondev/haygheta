@@ -19,19 +19,20 @@ module.exports = function (app) {
      */
     app.use(function (req, res, next) {
         res.locals.user = req.session.user;
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        //res.setHeader('Access-Control-Allow-Origin', '*');
 
         // Request methods you wish to allow
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
+        //res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        //res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
         next();
     });
 
     // index
     app.get('/', indexController.index);
-
+    app.post('/admin/get_list_episode', userController.user_req, userController.admin_req, movieController.getListEpisodes);
+    app.get('/admin/get_a_episode/:id', userController.user_req, userController.admin_req, movieController.get_a_episode);
     // movie
-    app.get('/detail/:id', movieController.detail);
+    app.get('/detail/:id/:episodesID', movieController.detail);
     app.get('/admin/add_type', userController.user_req, userController.admin_req, movieController.add_type);
     app.get('/admin/add_group', userController.user_req, userController.admin_req, movieController.add_group);
     app.post('/admin/save_type', userController.user_req, userController.admin_req, movieController.save_type);
@@ -39,11 +40,14 @@ module.exports = function (app) {
     app.get('/admin/episodes_list/:id', userController.user_req, userController.admin_req, movieController.episodes_list);
     app.get('/admin/add_episodes/:id', userController.user_req, userController.admin_req, movieController.add_episodes);
     app.post('/admin/save_episodes', userController.user_req, userController.admin_req, movieController.save_episodes);
+    app.post('/admin/edit_episodes', userController.user_req, userController.admin_req, movieController.edit_episodes);
+    app.post('/admin/upload_thumnail_episodes', userController.user_req, userController.admin_req, movieController.upload_thumnail_episodes);
     app.post('/admin/upload_episodes', userController.user_req, userController.admin_req, movieController.upload_episodes);
     app.get('/admin/add_movie', userController.user_req, userController.admin_req, movieController.add_movie);
     app.post('/admin/new', userController.user_req, userController.admin_req, movieController.movie_save);
     app.get('/admin/movie_list', userController.user_req, userController.admin_req, movieController.movie_list);
     app.get('/admin/movie_update/:id', userController.user_req, userController.admin_req, movieController.movie_update);
+    app.get('/admin/update_episodes/:id', userController.user_req, userController.admin_req, movieController.update_episodes);
     app.delete('/admin/movie_list', userController.user_req, userController.admin_req, movieController.movie_delete);
 
     // comment

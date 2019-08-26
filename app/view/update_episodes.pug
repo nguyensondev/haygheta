@@ -1,0 +1,29 @@
+extends ./layout
+
+block content
+    .row
+        form.form-horizontal(method="post", action="/admin/edit_episodes")
+            input(type="hidden", name="episodes[_id]", value=episodes._id)
+            .form-group
+                label.col-sm-2.control-label(for="name") Tên tập
+                .col-sm-10
+                    input#name.form-control(type="text", name="episodes[name]", value=episodes.name)
+            .form-group
+                label.col-sm-2.control-label(for="name") Link
+                .col-sm-10
+                    input#name.form-control(type="text", name="episodes[url]", value=episodes.url)
+            .form-group
+                label.col-sm-2.control-label(for="name") Ảnh đại diện 
+                .col-sm-10
+                    input#name.form-control(type="text", name="episodes[urlThumnail]", value=episodes.urlThumnail)
+            .form-group
+                label.col-sm-2.control-label(for="name") Ảnh đại diện(chưa dùng)
+                .col-sm-10                    
+                    img#imgThumnail(src=episodes.urlThumnail height=80 width=60)                 
+                    input#imgDataThumnail(type='file' name="upload")
+                    button#btnUploadThumnail(value="Upload")
+                        | Upload ảnh đại diện
+            .form-group
+                .col-sm-offset-6.col-sm-9
+                    button.btn.btn-success(type="submit") Lưu
+    script(src='/javascripts/update_episodes.js')

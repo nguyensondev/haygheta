@@ -29,6 +29,7 @@
     "node-openload": "^2.2.0",
     "nodemon": "^1.19.1",
     "pug": "^2.0.0-rc.2",
+    "request": "^2.88.0",
     "serve-favicon": "~2.4.2",
     "underscore": "^1.8.3"
   },

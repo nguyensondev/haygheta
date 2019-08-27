@@ -17,6 +17,7 @@ const commentModel = require('../model/mongoose/model/commentModel');
 const groupModel = require('../model/mongoose/model/groupModel');
 const typeModel = require('../model/mongoose/model/typeModel');
 const _ = require('underscore');
+var request = require('request');
 const openload = require('node-openload');
 const ol = openload({
     api_login: "25c363bb39ee91f2",
@@ -42,42 +43,79 @@ exports.getListEpisodes = function (req, res) {
     })
 }
 
-exports.get_a_episode = function (req, res) {
-    episodesModel.find({ _id: req.params.id }, function (err, episodes) {
-        if (episodes.length > 0) {
+function getEpisode(episodes, res){
+    request({ method: 'HEAD', uri: episodes.url }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log("link con song")
             return res.status(200).send({
                 success: 'true',
                 message: 'get successfully',
-                data: episodes[0]
+                data: episodes
             })
         } else {
-            return res.status(404).send({
-                success: 'false',
-                message: 'not found',
-                data: null
+            console.log("link da chet ")
+            ol.getDownloadLink({
+                file: episodes.videoID,
+                ticket: episodes.videoTicket,
             })
-        }
+                .then(data2 => {
+                    if (data2) {
+                        episodes.url = data2.url
+                        episodesModel.update(
+                            { "_id": episodes._id },
+                            { "$set": { "url": data2.url } },
+                            function (err, raw) {
+                                if (err) {
+                                    console.log('Error log: ' + err)
+                                } else {
+                                    console.log("Token updated: " + raw);
+                                    return res.status(200).send({
+                                        success: 'true',
+                                        message: 'get successfully',
+                                        data: episodes
+                                    })
+                                }
+                            }
+                        );
 
+                    }
+                });
+        }
     })
+}
+
+exports.get_a_episode = function (req, res) {
+    if(req.params.id==="-1"){
+        episodesModel.findOne({}, {}, { sort: { 'created_at' : 1 } }, function(err, post) {
+            getEpisode(post, res);
+          });
+    }else{
+        episodesModel.find({ _id: req.params.id }, function (err, episodes) {
+            if (episodes.length > 0) {
+                getEpisode(episodes[0], res);    
+            } else {
+                return res.status(404).send({
+                    success: 'false',
+                    message: 'not found',
+                    data: null
+                })
+            }
+    
+        })
+    }
+   
 
 }
 
-exports.get_link_episode = function (req, res) {
-    let id =req.params.id
-    let ticket =req.params.ticket
-    ol.getDownloadLink({
-        file: id,
-        ticket: ticket,
+exports.get_list_episode = function (req, res) {
+    let id = req.params.id    
+    episodesModel.find({ movieID: id }, function (err, episodes) {
+        return res.status(200).send({
+            success: 'true',
+            message: 'get successfully',
+            data: episodes
+        })
     })
-        .then(data2 => {            
-            if (data2) {
-                return res.status(200).send({
-                    success: 'true',
-                    message: 'get successfully',
-                    data: data2.url
-                })                
-            }
-        });
 
 }
 
@@ -90,49 +128,55 @@ exports.detail = function (req, res) {
     console.log("id ", id)
     movieModel.findById(id, function (err, movie) {
         // 取到该电影的评论数据
-        episodesModel.find({ movieID: id }, function (err, episodes) {
-
-
-            if (err) {
-                console.log(err);
-            }
-            let defaultURl = ""
-            let thumnail = ""
-            if (episodes.length > 0) {
-                if (episodesID === "-1") {
-                    defaultURl = episodes[episodes.length - 1].url
-                    thumnail = episodes[episodes.length - 1].urlThumnail
-                    res.render('detail', {
-                        title: 'Trang chi tiết phim',
-                        movie: movie,
-                        episodes: episodes,
-                        defaultURl: defaultURl,
-                        thumnailURL: thumnail,
-                        episodesID: episodesID
-                    });
-                }
-                else {
-                    // episodes.map(item => {
-                    //     console.log(item._id);
-                    //     if (item._id === episodesID) {
-                    //         defaultURl = item.url
-                    //         thumnail = item.urlThumnail
-                    //     }
-                    // })
-                    //let temps = output = episodes.filter(function(value){ return value._id==episodesID;})
-                    res.render('detail', {
-                        title: 'Trang chi tiết phim',
-                        movie: movie,
-                        episodes: episodes,
-                        defaultURl: "",
-                        thumnailURL: "",
-                        episodesID: episodesID
-                    });
-                }
-
-            }
-
+        res.render('detail', {
+            title: 'Trang chi tiết phim',
+            movie: movie,        
+            episodesID: episodesID
         });
+        // episodesModel.find({ movieID: id }, function (err, episodes) {
+
+
+        //     if (err) {
+        //         console.log(err);
+        //     }
+        //     let defaultURl = ""
+        //     let thumnail = ""
+        //     if (episodes.length > 0) {
+                
+        //         if (episodesID === "-1") {
+        //             defaultURl = episodes[episodes.length - 1].url
+        //             thumnail = episodes[episodes.length - 1].urlThumnail
+        //             res.render('detail', {
+        //                 title: 'Trang chi tiết phim',
+        //                 movie: movie,
+        //                 episodes: episodes,
+        //                 defaultURl: defaultURl,
+        //                 thumnailURL: thumnail,
+        //                 episodesID: episodesID
+        //             });
+        //         }
+        //         else {
+        //             // episodes.map(item => {
+        //             //     console.log(item._id);
+        //             //     if (item._id === episodesID) {
+        //             //         defaultURl = item.url
+        //             //         thumnail = item.urlThumnail
+        //             //     }
+        //             // })
+        //             //let temps = output = episodes.filter(function(value){ return value._id==episodesID;})
+        //             res.render('detail', {
+        //                 title: 'Trang chi tiết phim',
+        //                 movie: movie,
+        //                 episodes: episodes,
+        //                 defaultURl: "",
+        //                 thumnailURL: "",
+        //                 episodesID: episodesID
+        //             });
+        //         }
+
+        //     }
+
+        // });
         // commentModel.find({ movie: id }, function (err, comments) {
         //     console.log(comments);
 
@@ -267,7 +311,9 @@ exports.upload_episodes = function (req, res) {
                                             "movieID": fields.movieid,
                                             "name": files.upload.name,
                                             "url": data2.url,
-                                            "urlThumnail": ""
+                                            "urlThumnail": "",
+                                            "videoTicket": info.ticket,
+                                            "videoID": id
                                         });
                                         console.log("cuoi cung", episodes);
                                         episodes.save(function (err, epi) {
@@ -424,6 +470,8 @@ exports.save_episodes = function (req, res) {
                             // lưu link lấy được vào database
                             if (data) {
                                 _episodes.url = data.url
+                                _episodes.videoTicket = info.ticket
+                                _episodes.videoID = id
                                 let episodes = new episodesModel(_episodes);
                                 console.log("cuoi cung", episodes);
                                 episodes.save(function (err, epi) {
@@ -446,6 +494,8 @@ exports.save_episodes = function (req, res) {
                             // lưu link lấy được vào database
                             if (data) {
                                 _episodes.url = data.url
+                                _episodes.videoTicket = info.ticket
+                                _episodes.videoID = id
                                 let episodes = new episodesModel(_episodes);
                                 console.log("cuoi cung capcha", episodes);
                                 episodes.save(function (err, epi) {

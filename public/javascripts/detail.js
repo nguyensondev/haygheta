@@ -1,39 +1,66 @@
 $(document).ready(function () {
 
-  var url = $('#urlHidden').val();
-  var thumnail = $('#urlThumnalHidden').val();
+  jwplayer("player_haygheta").setup({ 
+    image: $('#posterLink').val(),
+    file:"",  
+    autostart: 'viewable',
+    mute: false,    
+    width: "100%",
+    height: 500,    
+    aspectratio: "16:9"
+  });
+  var movieID = $('#movieID').val();
   var episodesID = $('#episodesID').val();
   var temp = $(".episode").find('a').attr('data-episode-id')
-  if (episodesID === "-1") {
-    $('.list-episode li:last a').addClass('active')
-    jwplayer("player_haygheta").setup({
-      image: thumnail,
-      file: url,
-      //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
-      width: "100%",
-      aspectratio: "16:9"
-    });
-  }
-  else {
-    console.log(episodesID)
-    $.ajax({
-      type: "GET",
-      url: '/admin/get_a_episode/' + episodesID,
+  getListEpisodes(movieID, episodesID)
+  $.ajax({
+    type: "GET",
+    url: '/admin/get_a_episode/' + episodesID,
 
-      success: function (response) {
-        jwplayer("player_haygheta").setup({
-          image: response.data.urlThumnail,
-          file: response.data.url,
-          //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
-          width: "100%",
-          aspectratio: "16:9"
-        });
-      },
-      error: function (err) {
-        console.log(err)
-      }
-    });
-  }
+    success: function (response) {
+      jwplayer("player_haygheta").attr("file", response.data.url)
+      // jwplayer("player_haygheta").setup({
+      //   image: response.data.urlThumnail,
+      //   file: response.data.url,
+      //   //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
+      //   width: "100%",
+      //   aspectratio: "16:9"
+      // }).play();
+    },
+    error: function (err) {
+      console.log(err)
+    }
+  });
+  // if (episodesID === "-1") {
+  //   $('.list-episode li:last a').addClass('active')
+  //   jwplayer("player_haygheta").setup({
+  //     image: thumnail,
+  //     file: url,
+  //     //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
+  //     width: "100%",
+  //     aspectratio: "16:9"
+  //   });
+  // }
+  // else {
+  //   console.log(episodesID)
+  //   $.ajax({
+  //     type: "GET",
+  //     url: '/admin/get_a_episode/' + episodesID,
+
+  //     success: function (response) {
+  //       jwplayer("player_haygheta").setup({
+  //         image: response.data.urlThumnail,
+  //         file: response.data.url,
+  //         //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
+  //         width: "100%",
+  //         aspectratio: "16:9"
+  //       });
+  //     },
+  //     error: function (err) {
+  //       console.log(err)
+  //     }
+  //   });
+  // }
   //$('#player').attr('src', url)
 
 
@@ -46,6 +73,50 @@ $(document).ready(function () {
   //
 
 })
+var player;
+function handleActivePlayer(e, video) {
+  var activeDiv = e.target;
+  if (player) {
+    player.remove();
+  }
+  thumbs.forEach(function(thumb) {
+    thumb.classList.remove('active');
+  })
+  activeDiv.classList.add('active');
+
+  // Chain .play() onto player setup (rather than autostart: true)
+  player = jwplayer(activeDiv.id).setup({
+    file: '//content.jwplatform.com/manifests/' + video.mediaid + '.m3u8'
+  }).play();
+
+  // Destroy the player and replace with thumbnail
+  player.on('complete', function() {
+    player.remove();
+    player = null;
+  });
+}
+
+function getListEpisodes(movieID, episodesID) {
+  $.ajax({
+    type: "GET",
+    url: '/admin/get_list_episode/' + movieID,
+
+    success: function (response) {
+      if (response.data.length > 0) {
+        response.data.forEach(element => {
+          if (element._id === episodesID)
+            $(".list-episode").append("<li class='episode' data-link=" + element.url + "><a title=" + element.name + " data-episode-id=" + element._id + " data-num='1' data-type='watch' class='btn-episode btn3d black active' href='/detail/" + element.movieID + "/" + element._id + "'>" + element.name + "</a></li>")
+          else
+            $(".list-episode").append("<li class='episode' data-link=" + element.url + "><a title=" + element.name + " data-episode-id=" + element._id + " data-num='1' data-type='watch' class='btn-episode btn3d black' href='/detail/" + element.movieID + "/" + element._id + "'>" + element.name + "</a></li>")
+        });
+      }
+
+    },
+    error: function (err) {
+      console.log(err)
+    }
+  });
+}
 function UrlExists(response) {
   jQuery.ajax({
     url: response.data.url,

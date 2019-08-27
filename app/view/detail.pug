@@ -1,8 +1,8 @@
 extends ./layout
 
 block content
-    input(type="hidden", id="urlHidden", value=defaultURl)
-    input(type="hidden", id="urlThumnalHidden", value=thumnailURL)
+    input(type="hidden", id="movieID", value=movie._id) 
+    input(type="hidden", id="posterLink", value=movie.poster)    
     input(type="hidden", id="episodesID", value=episodesID)
     .row.row-eq-height
         .col-md-8
@@ -75,9 +75,9 @@ block content
       .tab-content
         #home.tab-pane.active(role='tabpanel') 
           ul.list-episode
-            each item in episodes
-              li.episode(data-link=item.url) 
-                a.btn-episode.btn3d.black(title=item.name data-episode-id=episodesID data-num='1' data-type='watch' href="/detail/" + item.movieID +"/"+item._id) #{item.name}
+            //- each item in episodes
+            //-   li.episode(data-link=item.url) 
+            //-     a.btn-episode.btn3d.black(title=item.name data-episode-id=episodesID data-num='1' data-type='watch' href="/detail/" + item.movieID +"/"+item._id) #{item.name}
         #profile.tab-pane(role='tabpanel') ...        
     
     

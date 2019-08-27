@@ -31,7 +31,7 @@ module.exports = function (app) {
     app.get('/', indexController.index);
     app.post('/admin/get_list_episode', userController.user_req, userController.admin_req, movieController.getListEpisodes);
     app.get('/admin/get_a_episode/:id', userController.user_req, userController.admin_req, movieController.get_a_episode);
-    app.get('/admin/get_link_episode/:id', userController.user_req, userController.admin_req, movieController.get_link_episode);
+    app.get('/admin/get_list_episode/:id', userController.user_req, userController.admin_req, movieController.get_list_episode);
     // movie
     app.get('/detail/:id/:episodesID', movieController.detail);
     app.get('/admin/add_type', userController.user_req, userController.admin_req, movieController.add_type);

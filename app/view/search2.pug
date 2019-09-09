@@ -1,0 +1,16 @@
+extends ./layout
+
+block content
+    .search-title Kết quả tìm kiếm: #{query}
+    if movies.length > 0
+        .row         
+            each item in movies        
+                .col-md-2.col-sm-2
+                    a.thumbnail(href="/anime/" + item.titleNon +"/-1")
+                        img(src=item.poster, alt=item.title)
+                        .caption
+                            h6.ellipsis-1= item.title
+                            .vn
+                                h6= item.titleVN
+    else
+        .search-no-item Không tìm thấy kết quả nào phù hợp

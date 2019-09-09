@@ -21,9 +21,9 @@ block content
                 each item in movies
                     tr(class="item-id-" + item._id)
                         td 
-                            a(target="_blank", href="/detail/" + item._id +"/-1", ) #{item.title}
+                            a(target="_blank", href="/anime/" + item.titleNon +"/-1", ) #{item.title}
                         td 
-                            a(target="_blank", href="/detail/" + item._id+ "/-1", ) #{item.titleVN}
+                            a(target="_blank", href="/anime/" + item.titleNon+ "/-1", ) #{item.titleVN}
                         td= item.country
                         td= item.language
                         td= item.year

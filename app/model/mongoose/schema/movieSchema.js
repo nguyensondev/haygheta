@@ -21,6 +21,7 @@ let ObjectId = mongoose.Schema.Types.ObjectId;
 let movieSchema = new mongoose.Schema({
     title: String,
     titleVN: String,
+    titleNon: String,
     doctor: String,
     country: String,
     year: Number,

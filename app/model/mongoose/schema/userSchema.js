@@ -27,6 +27,9 @@ let userSchema = new mongoose.Schema({
     password: {
         type: String
     },
+    avatar:{
+        type:String
+    },
     // 10   > normal user
     // 20   > verified user
     // 30   > super user

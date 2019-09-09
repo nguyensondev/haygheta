@@ -5,9 +5,13 @@ block content
         form.form-horizontal(method="post", action="/admin/edit_episodes")
             input(type="hidden", name="episodes[_id]", value=episodes._id)
             .form-group
-                label.col-sm-2.control-label(for="name") Tên tập
+                label.col-sm-2.control-label(for="name") Tập thứ
                 .col-sm-10
                     input#name.form-control(type="text", name="episodes[name]", value=episodes.name)
+            .form-group
+                label.col-sm-2.control-label(for="name") Tên tập
+                .col-sm-10
+                    input#name.form-control(type="text", name="episodes[episodeName]", value=episodes.episodeName)
             .form-group
                 label.col-sm-2.control-label(for="name") Link
                 .col-sm-10

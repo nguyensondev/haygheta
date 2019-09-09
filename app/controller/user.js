@@ -18,7 +18,7 @@ const _ = require('underscore');
  * 判断用户是否登录
  *     若未登录（无 session），就重定向到登录页
  */
-exports.user_req = function(req, res, next) {
+exports.user_req = function (req, res, next) {
     let user = req.session.user;
 
     if (!user) {
@@ -33,7 +33,7 @@ exports.user_req = function(req, res, next) {
  * 用户权限中间件
  * 判断用户角色
  */
-exports.admin_req = function(req, res, next) {
+exports.admin_req = function (req, res, next) {
     let user = req.session.user;
     // console.log(user.role)
 
@@ -47,7 +47,7 @@ exports.admin_req = function(req, res, next) {
 /**
  * 登录页
  */
-exports.show_signup = function(req, res) {
+exports.show_signup = function (req, res) {
     res.render('signup', {
         title: 'Trang Đăng Ký'
     });
@@ -56,7 +56,7 @@ exports.show_signup = function(req, res) {
 /**
  * 注册页
  */
-exports.show_signin = function(req, res) {
+exports.show_signin = function (req, res) {
     res.render('signin', {
         title: 'Trang Đăng Nhập'
     });
@@ -68,13 +68,13 @@ exports.show_signin = function(req, res) {
  *     若 name 存在，返回 “用户名已存在”；
  *     若 name 不存在，就存到数据库，返回 “注册成功”。
  */
-exports.signup = function(req, res) {
+exports.signup = function (req, res) {
     let userObj = req.body.user;
     // let userObj = req.param('user'); // deprecated
 
     // console.log(userObj); // { name: '1', password: '2' }
 
-    userModel.findOne({ name: userObj.name }, function(err, user) {
+    userModel.findOne({ name: userObj.name }, function (err, user) {
         if (err) {
             console.log(err);
         }
@@ -85,8 +85,9 @@ exports.signup = function(req, res) {
             return res.redirect('/signup');
         } else {
             let newUser = new userModel(userObj);
-
-            newUser.save(function(err, user) {
+            let idAvatar = Math.floor(Math.random() * 6) + 1;
+            newUser.avatar = "https://i.imacdn.com/vg/default-avatar-"+idAvatar+".png"
+            newUser.save(function (err, user) {
                 if (err) {
                     console.log(err);
                 }
@@ -109,13 +110,13 @@ exports.signup = function(req, res) {
  *         若不一致，返回 “密码错误”；
  *         若一直，返回 “登录成功”。
  */
-exports.signin = function(req, res) {
+exports.signin = function (req, res) {
     let userObj = req.body.user;
     let name = userObj.name;
     let password = userObj.password;
 
     // 在数据库中查询
-    userModel.findOne({ name: name }, function(err, result) {
+    userModel.findOne({ name: name }, function (err, result) {
         if (err) {
             console.log(err);
         }
@@ -125,7 +126,7 @@ exports.signin = function(req, res) {
             return res.redirect('/signin');
         }
 
-        result.comparePassword(password, function(err, isMatch) {
+        result.comparePassword(password, function (err, isMatch) {
             if (err) {
                 console.log(err);
             }
@@ -135,6 +136,8 @@ exports.signin = function(req, res) {
                 req.session.user = result;
 
                 console.log('Đăng nhập thành công!');
+                //res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+                //return res.redirect('back');
                 return res.redirect('/');
             } else {
                 console.log('Đăng nhập thất bại, mật khẩu sai!');
@@ -148,7 +151,7 @@ exports.signin = function(req, res) {
  * 用户注销逻辑
  * 删除该用户的 session
  */
-exports.user_logout = function(req, res) {
+exports.user_logout = function (req, res) {
     delete req.session.user;
 
     // 重定向
@@ -160,8 +163,8 @@ exports.user_logout = function(req, res) {
  * 用户列表页逻辑
  * 取到用户的 session，
  */
-exports.user_list = function(req, res) {
-    userModel.findAll(function(err, users) {
+exports.user_list = function (req, res) {
+    userModel.findAll(function (err, users) {
         if (err) {
             console.log(err);
         }
@@ -176,7 +179,7 @@ exports.user_list = function(req, res) {
 /**
  * 存储一个新用户存储页
  */
-exports.add_user = function(req, res) {
+exports.add_user = function (req, res) {
     res.render('add_user', {
         title: 'Trang thêm người dùng',
         user: {
@@ -190,7 +193,7 @@ exports.add_user = function(req, res) {
 /**
  * 用户录入逻辑
  */
-exports.save_user = function(req, res) {
+exports.save_user = function (req, res) {
     let id = req.body.user._id;
     let userObj = req.body.user;
     let postUser = null;
@@ -199,7 +202,7 @@ exports.save_user = function(req, res) {
     if (id) {
         console.log('Lưu không thành công và tên người dùng đã tồn tại!');
 
-        userModel.findById(id, function(err, user) {
+        userModel.findById(id, function (err, user) {
             if (err) {
                 console.log(err);
             }
@@ -207,7 +210,7 @@ exports.save_user = function(req, res) {
             // postUser = Object.assign({}, user, movieObj);
             // 用 underscore 替换对象
             postUser = _.extend(user, userObj);
-            postUser.save(function(err, user) {
+            postUser.save(function (err, user) {
                 if (err) {
                     console.log(err);
                 }
@@ -223,7 +226,7 @@ exports.save_user = function(req, res) {
             role: userObj.role
         });
 
-        postUser.save(function(err, user) {
+        postUser.save(function (err, user) {
             if (err) {
                 console.log(err);
             }
@@ -235,12 +238,12 @@ exports.save_user = function(req, res) {
 };
 
 // 修改用户
-exports.user_update = function(req, res) {
+exports.user_update = function (req, res) {
     let id = req.params.id;
     console.log(id)
 
     if (id) {
-        userModel.findById(id, function(req, user) {
+        userModel.findById(id, function (req, user) {
             res.render('add_user', {
                 title: 'Trang sửa thông tin người dùng',
                 user: user
@@ -250,11 +253,11 @@ exports.user_update = function(req, res) {
 };
 
 // 删除用户
-exports.user_delete = function(req, res) {
+exports.user_delete = function (req, res) {
     let id = req.query.id;
 
     if (id) {
-        userModel.remove({ _id: id }, function(err, user) {
+        userModel.remove({ _id: id }, function (err, user) {
             if (err) {
                 console.log(err);
             } else {

@@ -8,7 +8,15 @@ let episodesSchema = new mongoose.Schema({
     name: {
         type: String
     },
+    episodeName:{
+        type: String
+    },
+    episodeNameNon:{
+        type: String
+    },
     url: {type: String},
+    urlGGDrive: {type: String},
+    urlOthers: {type: String},
     urlThumnail: {type: String},
     capcha: {type: String},
     view: {type: Number},

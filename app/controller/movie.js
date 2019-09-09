@@ -17,6 +17,7 @@ const commentModel = require('../model/mongoose/model/commentModel');
 const groupModel = require('../model/mongoose/model/groupModel');
 const typeModel = require('../model/mongoose/model/typeModel');
 const _ = require('underscore');
+const url = require('url');
 var request = require('request');
 const openload = require('node-openload');
 const ol = openload({
@@ -43,7 +44,7 @@ exports.getListEpisodes = function (req, res) {
     })
 }
 
-function getEpisode(episodes, res){
+function getEpisode(episodes, res) {
     request({ method: 'HEAD', uri: episodes.url }, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log("link con song")
@@ -54,45 +55,48 @@ function getEpisode(episodes, res){
             })
         } else {
             console.log("link da chet ")
-            ol.getDownloadLink({
-                file: episodes.videoID,
-                ticket: episodes.videoTicket,
-            })
-                .then(data2 => {
-                    if (data2) {
-                        episodes.url = data2.url
-                        episodesModel.update(
-                            { "_id": episodes._id },
-                            { "$set": { "url": data2.url } },
-                            function (err, raw) {
-                                if (err) {
-                                    console.log('Error log: ' + err)
-                                } else {
-                                    console.log("Token updated: " + raw);
-                                    return res.status(200).send({
-                                        success: 'true',
-                                        message: 'get successfully',
-                                        data: episodes
-                                    })
+            ol.getDownloadTicket(episodes.videoID).then(info => {
+                ol.getDownloadLink({
+                    file: episodes.videoID,
+                    ticket: info.ticket,
+                })
+                    .then(data2 => {
+                        if (data2) {
+                            episodes.url = data2.url
+                            episodesModel.update(
+                                { "_id": episodes._id },
+                                { "$set": { "url": data2.url } },
+                                function (err, raw) {
+                                    if (err) {
+                                        console.log('Error log: ' + err)
+                                    } else {
+                                        console.log(raw);
+                                        return res.status(200).send({
+                                            success: 'true',
+                                            message: 'get successfully',
+                                            data: episodes
+                                        })
+                                    }
                                 }
-                            }
-                        );
+                            );
 
-                    }
-                });
+                        }
+                    });
+            })
+
         }
     })
 }
 
 exports.get_a_episode = function (req, res) {
-    if(req.params.id==="-1"){
-        episodesModel.findOne({}, {}, { sort: { 'created_at' : 1 } }, function(err, post) {
+    if (req.params.id === "-1") {
+        episodesModel.findOne({}, {}, { sort: { 'created_at': 1 } }, function (err, post) {
             getEpisode(post, res);
-          });
-    }else{
-        episodesModel.find({ _id: req.params.id }, function (err, episodes) {
+        });
+    } else {
+        episodesModel.find({ episodeNameNon: req.params.id }, function (err, episodes) {
             if (episodes.length > 0) {
-                getEpisode(episodes[0], res);    
+                getEpisode(episodes[0], res);
             } else {
                 return res.status(404).send({
                     success: 'false',
@@ -100,15 +104,15 @@ exports.get_a_episode = function (req, res) {
                     data: null
                 })
             }
-    
+
         })
     }
-   
+
 
 }
 
 exports.get_list_episode = function (req, res) {
-    let id = req.params.id    
+    let id = req.params.id
     episodesModel.find({ movieID: id }, function (err, episodes) {
         return res.status(200).send({
             success: 'true',
@@ -126,13 +130,24 @@ exports.detail = function (req, res) {
     let episodesID = req.params.episodesID;
     console.log("episodesID ", episodesID)
     console.log("id ", id)
-    movieModel.findById(id, function (err, movie) {
-        // 取到该电影的评论数据
-        res.render('detail', {
-            title: 'Trang chi tiết phim',
-            movie: movie,        
-            episodesID: episodesID
-        });
+    movieModel.find({ titleNon: id }, function (err, movie) {
+        if (episodesID === "-1") {
+            episodesModel.find({ movieID: movie[0]._id }, function (err, episodes) {
+                res.redirect(url.format({
+                    pathname: "/anime/" + movie[0].titleNon + "/" + episodes[0].episodeNameNon,
+                }));
+            })
+        }
+        else {
+            // 取到该电影的评论数据
+            res.render('detail', {
+                title: 'React native',
+                movie: movie[0],
+                episodesID: episodesID,
+                user: req.session.user
+            });
+        }
+
         // episodesModel.find({ movieID: id }, function (err, episodes) {
 
 
@@ -142,7 +157,7 @@ exports.detail = function (req, res) {
         //     let defaultURl = ""
         //     let thumnail = ""
         //     if (episodes.length > 0) {
-                
+
         //         if (episodesID === "-1") {
         //             defaultURl = episodes[episodes.length - 1].url
         //             thumnail = episodes[episodes.length - 1].urlThumnail
@@ -251,6 +266,9 @@ exports.edit_episodes = function (req, res) {
         let array = episodesObj.urlThumnail.toString().split('/')
         episodesObj.urlThumnail = linkDrive + array[5]
     }
+    let name = remove_unicode(episodesObj.name.replace(new RegExp(" ", 'g'), "-"))
+    let episodeName = remove_unicode(episodesObj.episodeName.replace(new RegExp(" ", 'g'), "-"))
+    episodesObj.episodeNameNon = (name + "-" + episodeName).replace(" ", "")
     if (id) {
         episodesModel.findById(id, function (err, episode) {
             if (err) {
@@ -580,6 +598,22 @@ exports.add_type = function (req, res) {
         }
     });
 };
+function remove_unicode(str) {
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'| |\"|\&|\#|\[|\]|~|$|_/g, "-");
+
+    str = str.replace(/-+-/g, "-"); //thay thế 2- thành 1- 
+    str = str.replace(/^\-+|\-+$/g, "");
+
+    return str.toLowerCase();
+}
 // add_movie page - post
 exports.movie_save = function (req, res) {
     let id = req.body.movie._id;
@@ -606,8 +640,10 @@ exports.movie_save = function (req, res) {
             });
         });
     } else {
+        let temp = remove_unicode(movieObj.title.replace(new RegExp(" ", 'g'), "-"))
         postMovie = new movieModel({
             title: movieObj.title,
+            titleNon: temp,
             doctor: movieObj.doctor,
             country: movieObj.country,
             language: movieObj.language,
@@ -691,3 +727,35 @@ exports.movie_delete = function (req, res) {
         });
     }
 };
+
+// GET episodes-list page.
+exports.search_movie = function (req, res) {
+    let query = req.params.query;
+    let type = req.params.type;
+    let searchQuery
+    if (type === "0") {
+        searchQuery = {
+            title: { $regex: query, $options: "i" }
+        };
+    } else {
+        searchQuery = {
+            title: { $regex: query, $options: "i" },
+            type: { $regex: type, $options: "i" }
+        };
+    }    
+    movieModel.find(searchQuery, function (err, epi) {
+        if (err) {
+            console.log(err);
+        }
+        if (epi) {
+            //console.log(epi);
+            res.render('search2', {movies: epi, query: query});
+            // return res.status(200).send({
+            //     success: 'true',
+            //     message: 'get successfully',
+            //     data: epi
+            // })
+        }
+    });
+};
+

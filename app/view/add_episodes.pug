@@ -31,7 +31,20 @@ block content
                                 input#inputSummary.form-control(type="text", name="episodes[url]", value=_episodes.url)
                             else  
                                 input#inputSummary.form-control(type="text", name="episodes[url]", value="")
-                            
+                    .form-group
+                        label.col-sm-2.control-label(for="inputSummary") Url Google Drive
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputSummary.form-control(type="text", name="episodes[urlGGDrive]", value=_episodes.urlGGDrive)
+                            else  
+                                input#inputSummary.form-control(type="text", name="episodes[urlGGDrive]", value="")
+                    .form-group
+                        label.col-sm-2.control-label(for="inputSummary") Url Other
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputSummary.form-control(type="text", name="episodes[urlOthers]", value=_episodes.urlOthers)
+                            else  
+                                input#inputSummary.form-control(type="text", name="episodes[urlOthers]", value="")           
                     if _episodes !== undefined
                         .form-group
                             label.col-sm-2.control-label(for="inputCapcha") Capcha

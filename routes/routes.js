@@ -19,21 +19,26 @@ module.exports = function (app) {
      */
     app.use(function (req, res, next) {
         res.locals.user = req.session.user;
+       // console.log(req.session)
         //res.setHeader('Access-Control-Allow-Origin', '*');
-
+        // const removeOnRoutes = '/detail';
+        // req.originalUrl = req.originalUrl.replace(removeOnRoutes,'/anime');
+        // req.path = req.path.replace(removeOnRoutes,'/anime');
         // Request methods you wish to allow
         //res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
         //res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization');
         next();
     });
-
+    //search_movie
     // index
     app.get('/', indexController.index);
-    app.post('/admin/get_list_episode', userController.user_req, userController.admin_req, movieController.getListEpisodes);
-    app.get('/admin/get_a_episode/:id', userController.user_req, userController.admin_req, movieController.get_a_episode);
-    app.get('/admin/get_list_episode/:id', userController.user_req, userController.admin_req, movieController.get_list_episode);
+    app.post('/admin/get_list_episode',  movieController.getListEpisodes);
+    app.get('/admin/get_a_episode/:id',  movieController.get_a_episode);
+    app.get('/admin/get_list_episode/:id', movieController.get_list_episode);
     // movie
-    app.get('/detail/:id/:episodesID', movieController.detail);
+    //app.get('/search/:query/:type', movieController.search_movie);
+    app.get('/search/:query/:type', movieController.search_movie);
+    app.get('/anime/:id/:episodesID', movieController.detail);
     app.get('/admin/add_type', userController.user_req, userController.admin_req, movieController.add_type);
     app.get('/admin/add_group', userController.user_req, userController.admin_req, movieController.add_group);
     app.post('/admin/save_type', userController.user_req, userController.admin_req, movieController.save_type);
@@ -53,7 +58,8 @@ module.exports = function (app) {
 
     // comment
     app.post('/detail/comment', userController.user_req, commentController.comment_save);
-
+    app.post('/detail/reply_comment', userController.user_req, commentController.reply_comment);
+    app.get('/detail/get_comments/:id', commentController.get_comments);
     // category
     app.get('/admin/add_category', userController.user_req, userController.admin_req, categoryController.add_category);
     app.post('/admin/save_category', userController.user_req, userController.admin_req, categoryController.save_category);

@@ -39,23 +39,31 @@
             if types            
                 <ul class="nav navbar-nav" id="navSearch">
                     <form class="navbar-form" id="search" role="search">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Tìm Anime" aria-label="Search">
+                        <input id="txtQuery" class="form-control mr-sm-2" type="search" placeholder="Tìm Anime" aria-label="Search">
+                        
                         <div class="dropdown" style=" display: inline-block;">
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <span id="txtType">Tất cả</span>
+                                <span id="txtTypeID" style="display:none;">0</span>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 each item in types               
-                                    <li><a href="#">#{item.name}</a></li>                            
+                                    <li><a href="#">#{item.name}<span style="display:none;">#{item.id}</span></a></li>                            
                             </ul>
                         </div>
-                        <button id="dropdownMenu2" class="btn btn-outline-info my-2 my-sm-0" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        <a href="#" id="btnSearchMovie" type='button' class="btn btn-outline-info my-2 my-sm-0"><i class="glyphicon glyphicon-search"></i></a>
                     </form>
                 </ul>
             <ul class="nav navbar-nav navbar-right">
                 if user
-                    <li><a>Chào mừng bạn：#{user.name}</a></li>
+                
+                    <li>
+                        <a>
+                            img#imgAvatar(src=user.avatar)
+                            label #{user.name} 
+                        </a>
+                    </li>
                     <li><a href="/user_logout">Đăng xuất</a></li>
                 else
                     <li><a href="/signin">Đăng nhập</a></li>

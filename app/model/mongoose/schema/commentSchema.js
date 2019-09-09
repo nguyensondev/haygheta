@@ -21,17 +21,39 @@ let ObjectId = mongoose.Schema.Types.ObjectId;
  */
 
 let commentSchema = new mongoose.Schema({
+    id: {
+        type: String
+    },
     movie: {
         type: ObjectId,
         ref: 'movieModel'
     },
     from: {
-        type: ObjectId,
+        type: ObjectId,        
+        ref: 'userModel'
+    },
+    fromName: {
+        type: String,        
+        ref: 'userModel'
+    },
+    fromAvatar: {
+        type: String,        
         ref: 'userModel'
     },
     reply: [{
+        id: {
+            type: String
+        },
+        fromAvatar: {
+            type: String,        
+            ref: 'userModel'
+        },
+        fromName: {
+            type: String,        
+            ref: 'userModel'
+        },
         from: {
-            type: ObjectId,
+            type: ObjectId,            
             ref: 'userModel'
         },
         to: {
@@ -40,6 +62,16 @@ let commentSchema = new mongoose.Schema({
         },
         content: {
             type: String
+        },
+        meta: {
+            createAt: {
+                type: Date,
+                default: Date.now()
+            },
+            updateAt: {
+                type: Date,
+                default: Date.now()
+            }
         }
     }],
     content: {

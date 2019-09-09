@@ -733,35 +733,30 @@ exports.search_movie = function (req, res) {
     let query = req.params.query;
     let type = req.params.type;
     let searchQuery
-    if (type === "0") {
-        searchQuery = {
-            title: { $regex: query, $options: "i" }
-        };
-    } else {
-        searchQuery = {
-            title: { $regex: query, $options: "i" },
-            type: { $regex: type, $options: "i" }
-        };
-    }    
-    movieModel.find(searchQuery, function (err, epi) {
-        if (err) {
-            console.log(err);
-            return res.status(404).send({
-                success: 'false',
-                message: 'not found',
-                data: err
-            })
-        }
-        if (epi) {
-            //console.log(epi);
-            // res.status(200).send({
-            //     success: 'true',
-            //     message: 'get successfully',
-            //     data: "epi"
-            // })
-            res.render('search2', {movies: epi, query: query});
-            
-        }
-    });
+    res.render('search2', {movies: [], query: query});
+    // if (type === "0") {
+    //     searchQuery = {
+    //         title: { $regex: query, $options: "i" }
+    //     };
+    // } else {
+    //     searchQuery = {
+    //         title: { $regex: query, $options: "i" },
+    //         type: { $regex: type, $options: "i" }
+    //     };
+    // }    
+    // movieModel.find(searchQuery, function (err, epi) {
+    //     if (err) {
+    //         console.log(err);
+    //     }
+    //     if (epi) {
+    //         //console.log(epi);
+    //         res.render('search2', {movies: epi, query: query});
+    //         // return res.status(200).send({
+    //         //     success: 'true',
+    //         //     message: 'get successfully',
+    //         //     data: epi
+    //         // })
+    //     }
+    // });
 };
 

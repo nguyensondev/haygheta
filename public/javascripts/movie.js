@@ -6,7 +6,6 @@ $(function () {
     $("#txtTypeID").html($(this).find('span').text())
     $('#txtType').text(selText);
   });
- 
   $("#txtQuery").keyup(function (event) {
     if (event.keyCode == 13) {
       if ($(this).val() === "") {
@@ -15,18 +14,7 @@ $(function () {
       } else { 
         let query = $(this).val()
         let type = $("#txtTypeID").html()  
-        window.location.href = "/search/" + query + "/" + type; 
-        $.ajax({
-          type: "GET",
-          url: "/search/" + query + "/" + type,
-      
-          success: function (response) {
-            console.log(response)
-          },
-          error: function (err) {
-            console.log(err)
-          }
-        });        
+        window.location.href = "/search/" + query + "/" + type;         
       }
     }
   });
@@ -37,17 +25,6 @@ $(function () {
     } else {
       let query = $("#txtQuery").val()
       let type = $("#txtTypeID").html()
-      $.ajax({
-        type: "GET",
-        url: "/search/" + query + "/" + type,
-    
-        success: function (response) {
-          console.log(response)
-        },
-        error: function (err) {
-          console.log(err)
-        }
-      });  
       $('#btnSearchMovie').attr("href", "/search/" + query + "/" + type)
     }   
   });

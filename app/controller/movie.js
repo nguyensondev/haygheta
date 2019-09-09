@@ -746,6 +746,11 @@ exports.search_movie = function (req, res) {
     movieModel.find(searchQuery, function (err, epi) {
         if (err) {
             console.log(err);
+            res.status(404).send({
+                success: 'false',
+                message: 'not found',
+                data: err
+            })
         }
         if (epi) {
             //console.log(epi);

@@ -25,7 +25,7 @@ $(function () {
     } else {
       let query = $("#txtQuery").val()
       let type = $("#txtTypeID").html()
-      $('#btnSearchMovie').attr("href", "/search/" + query + "/" + type)
+      //$('#btnSearchMovie').attr("href", "/search/" + query + "/" + type)
     }   
   });
 

@@ -750,14 +750,13 @@ exports.search_movie = function (req, res) {
             console.log(err);
         }
         if (epi) {
-            res.redirect('/search2/fate/0');
+            //res.redirect('/search2/fate/0');
             //console.log(epi);
             //res.render('search2', {movies: epi, query: query});
-            // return res.status(200).send({
-            //     success: 'true',
-            //     message: 'get successfully',
-            //     data: epi
-            // })
+            return res.status(200).send({
+                success: 'true',
+                message: 'get successfully'
+            })
         }
     });
 };

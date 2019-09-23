@@ -733,30 +733,64 @@ exports.search_movie = function (req, res) {
     let query = req.params.query;
     let type = req.params.type;
     let searchQuery
-    res.render('search2', {movies: [], query: query});
-    // if (type === "0") {
-    //     searchQuery = {
-    //         title: { $regex: query, $options: "i" }
-    //     };
-    // } else {
-    //     searchQuery = {
-    //         title: { $regex: query, $options: "i" },
-    //         type: { $regex: type, $options: "i" }
-    //     };
-    // }    
-    // movieModel.find(searchQuery, function (err, epi) {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    //     if (epi) {
-    //         //console.log(epi);
-    //         res.render('search2', {movies: epi, query: query});
-    //         // return res.status(200).send({
-    //         //     success: 'true',
-    //         //     message: 'get successfully',
-    //         //     data: epi
-    //         // })
-    //     }
-    // });
+    //res.render('search2', {movies: [], query: query});
+    
+    if (type === "0") {
+        searchQuery = {
+            title: { $regex: query, $options: "i" }
+        };
+    } else {
+        searchQuery = {
+            title: { $regex: query, $options: "i" },
+            type: { $regex: type, $options: "i" }
+        };
+    }    
+    movieModel.find(searchQuery, function (err, epi) {
+        if (err) {
+            console.log(err);
+        }
+        if (epi) {
+            res.redirect('/search2/fate/0');
+            //console.log(epi);
+            //res.render('search2', {movies: epi, query: query});
+            // return res.status(200).send({
+            //     success: 'true',
+            //     message: 'get successfully',
+            //     data: epi
+            // })
+        }
+    });
 };
 
+exports.result_search_movie = function (req, res) {
+    let query = req.params.query;
+    let type = req.params.type;
+    let searchQuery
+    //res.render('search2', {movies: [], query: query});
+    
+    if (type === "0") {
+        searchQuery = {
+            title: { $regex: query, $options: "i" }
+        };
+    } else {
+        searchQuery = {
+            title: { $regex: query, $options: "i" },
+            type: { $regex: type, $options: "i" }
+        };
+    }    
+    movieModel.find(searchQuery, function (err, epi) {
+        if (err) {
+            console.log(err);
+        }
+        if (epi) {
+            res.render('search2', {movies: epi, query: query});
+            //console.log(epi);
+            //res.render('search2', {movies: epi, query: query});
+            // return res.status(200).send({
+            //     success: 'true',
+            //     message: 'get successfully',
+            //     data: epi
+            // })
+        }
+    });
+};

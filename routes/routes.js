@@ -36,7 +36,7 @@ module.exports = function (app) {
     app.get('/admin/get_a_episode/:id',  movieController.get_a_episode);
     app.get('/admin/get_list_episode/:id', movieController.get_list_episode);
     // movie
-    //app.get('/search/:query/:type', movieController.search_movie);
+    app.get('/search2/:query/:type', movieController.result_search_movie);
     app.get('/search/:query/:type', movieController.search_movie);
     app.get('/anime/:id/:episodesID', movieController.detail);
     app.get('/admin/add_type', userController.user_req, userController.admin_req, movieController.add_type);

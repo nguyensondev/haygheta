@@ -167,7 +167,7 @@ exports.detail = function (req, res) {
                     } else {
                         commentModel.find({ movie: currentEpisole.movieID }, function (err, comments) {
                             res.render('detail', {
-                                title: 'React native',
+                                title: currentEpisole.episodeName + "/"+movie[0].title,
                                 movie: movie[0],
                                 episodes: currentEpisole,
                                 lstEpisodes:lstEpisoles,

@@ -7,15 +7,18 @@ block content
             .groupMovieTitle
                 label #{"#"+items.name}
             .row
-                each item in movies
-                    if item.group == items.id
-                        .col-md-2.col-sm-2
-                            a.thumbnail(href="/anime/" + item.titleNon +"/-1")
-                                img(src=item.poster, alt=item.title)
-                                .caption
-                                    h6.ellipsis-1= item.title
-                                    .vn
-                                        h6= item.titleVN
+                if movies.length > 0
+                    each item in movies
+                        if item.group == items.id
+                            .col-md-2.col-sm-2
+                                a.thumbnail(href="/anime/" + item.titleNon +"/-1")
+                                    img(src=item.poster, alt=item.title)
+                                    .caption
+                                        h6.ellipsis-1= item.title
+                                        .vn
+                                            h6= item.titleVN
+                else
+                    h3 Đang cập nhật... 
     #searchContent
         
                             //- p

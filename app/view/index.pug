@@ -3,19 +3,19 @@ extends ./layout
 block content
     #homeContent
         include ./includes/slider
-        each items in groups
-            .groupMovieTitle
-                label #{"#"+items.name}
-            .row
-                each item in movies
-                    if item.group == items.id
-                        .col-md-2.col-sm-2
-                            a.thumbnail(href="/anime/" + item.titleNon +"/-1")
-                                img(src=item.poster, alt=item.title)
-                                .caption
-                                    h6.ellipsis-1= item.title
-                                    .vn
-                                        h6= item.titleVN
+        //- each items in groups
+        //-     .groupMovieTitle
+        //-         label #{"#"+items.name}
+        //-     .row
+        //-         each item in movies
+        //-             if item.group == items.id
+        //-                 .col-md-2.col-sm-2
+        //-                     a.thumbnail(href="/anime/" + item.titleNon +"/-1")
+        //-                         img(src=item.poster, alt=item.title)
+        //-                         .caption
+        //-                             h6.ellipsis-1= item.title
+        //-                             .vn
+        //-                                 h6= item.titleVN
     #searchContent
         
                             //- p

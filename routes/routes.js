@@ -45,7 +45,7 @@ module.exports = function (app) {
     app.post('/admin/save_group', userController.user_req, userController.admin_req, movieController.save_group);
     app.get('/admin/episodes_list/:id', userController.user_req, userController.admin_req, movieController.episodes_list);
     app.get('/admin/add_episodes/:id', userController.user_req, userController.admin_req, movieController.add_episodes);
-    app.post('/admin/save_episodes', userController.user_req, userController.admin_req, movieController.save_episodes);
+    app.post('/admin/save_episodes', userController.user_req, userController.admin_req, movieController.save_episodes_new);
     app.post('/admin/edit_episodes', userController.user_req, userController.admin_req, movieController.edit_episodes);
     app.post('/admin/upload_thumnail_episodes', userController.user_req, userController.admin_req, movieController.upload_thumnail_episodes);
     app.post('/admin/upload_episodes', userController.user_req, userController.admin_req, movieController.upload_episodes);

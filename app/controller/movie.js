@@ -455,6 +455,24 @@ exports.save_group = function (req, res) {
     });
 };
 // save_episodes page - post
+exports.save_episodes_new = function (req, res) {
+    let _episodes = req.body.episodes;
+    // let temp = _episodes.url.replace(/\s/g, '')
+    // let array = temp.toString().split(',')
+    // _episodes["url"] = array
+    let episodes = new episodesModel(_episodes);
+
+    episodes.save(function (err, epi) {
+        if (err) {
+            console.log(err);
+        }
+
+        res.redirect(req.get('referer'));
+    });
+    
+
+};
+// save_episodes page - post
 exports.save_episodes = function (req, res) {
     let _episodes = req.body.episodes;
     // let temp = _episodes.url.replace(/\s/g, '')

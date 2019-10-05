@@ -21,11 +21,11 @@ $(document).ready(function () {
       $('#imgDefault').hide();
       $('#player_haygheta').show();
       jwplayer("player_haygheta").setup({
-        image: response.data.urlThumnail,
-        file: response.data.url,
-        //file: "https://1fgqfvb.oloadcdn.net/dl/l/qZ5Ul5o8tOZNhHYW/5RUAW5VSuxE/%28autoP+-+mp4%29+One%2BPiece%2B%28Dub%29%2BEpisode%2B1.mp4",
+        image: response.data.urlThumnail,        
+        file: response.data.url,        
         width: "100%",
-        aspectratio: "16:9"
+        aspectratio: "16:9",
+        primary: "html5"
       })
     },
     error: function (err) {

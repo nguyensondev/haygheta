@@ -19,14 +19,14 @@ $(document).ready(function () {
     success: function (response) {
       //jwplayer("player_haygheta").attr("file", response.data.url)
       $('#imgDefault').hide();
-      $('#player_haygheta').show();
-      jwplayer("player_haygheta").setup({
-        image: response.data.urlThumnail,        
-        file: response.data.url,        
-        width: "100%",
-        aspectratio: "16:9",
-        primary: "html5"
-      })
+      // $('#player_haygheta').show();
+      // jwplayer("player_haygheta").setup({
+      //   image: response.data.urlThumnail,        
+      //   file: response.data.url,        
+      //   width: "100%",
+      //   aspectratio: "16:9",
+      //   primary: "html5"
+      // })
     },
     error: function (err) {
       console.log(err)

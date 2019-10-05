@@ -2,53 +2,34 @@ $(document).ready(function () {
   $('#player_haygheta').hide();
   var movieID = $('#movieID').val();
   var user = $('#user').val();
-  var episodes = JSON.parse(($('#episodesID').val()));
-  var episodesID = episodes._id;
+  var episodes = JSON.parse(($('#episodes').val()));
+  var lstEpisodes = JSON.parse(($('#lstEpisodes').val()));
+  var comments = JSON.parse(($('#comments').val()));
   var temp = $(".episode").find('a').attr('data-episode-id')
   jwplayer("player_haygheta").setup({
-        image: episodes.urlThumnail,        
-        file: episodes.url,        
-        width: "100%",
-        aspectratio: "16:9",
-        primary: "html5"
-      })
+    image: episodes.urlThumnail,
+    file: episodes.url,
+    width: "100%",
+    aspectratio: "16:9",
+    primary: "html5"
+  })
   if (user !== "") {
-    user = JSON.parse(user);    
+    user = JSON.parse(user);
     $("#commentInput").attr("placeholder", "Bình luận ở đây...");
   } else {
     $("#commentInput").attr("placeholder", "Vui lòng đăng nhập...");
   }
   //comment-reply
-  getListEpisodes(movieID, episodesID, $("#movieNone").val())
-  $.ajax({
-    type: "GET",
-    url: '/admin/get_a_episode/' + episodesID,
-
-    success: function (response) {
-      //jwplayer("player_haygheta").attr("file", response.data.url)
-      $('#imgDefault').hide();
-      // $('#player_haygheta').show();
-      // jwplayer("player_haygheta").setup({
-      //   image: response.data.urlThumnail,        
-      //   file: response.data.url,        
-      //   width: "100%",
-      //   aspectratio: "16:9",
-      //   primary: "html5"
-      // })
-    },
-    error: function (err) {
-      console.log(err)
-    }
-  });
-  getCommends(movieID)
+  getListEpisodes(movieID, episodes._id, $("#movieNone").val(), lstEpisodes)
+  getCommends(comments)
   window.adblock = false;
   window.adblock2 = false;
   window.turnoff = true;
   window.open = function () { };
   var isFocused = false;
-  
+
   $('input[class="reply-input"]').keypress(function (event) {
-    if (event.keyCode == 13) {  
+    if (event.keyCode == 13) {
       //$(this).attr("data-id"), 
       // tạm ẩn   
       // let content = $(this).val()
@@ -60,7 +41,7 @@ $(document).ready(function () {
       // } else {
       //   $.ajax({
       //     type: "POST", //rest Type
-          
+
       //     url: "/detail/reply_comment",
       //     async: false,
       //     data: {
@@ -69,7 +50,7 @@ $(document).ready(function () {
       //       content:content,
       //       movieID: movieID
       //     },
-          
+
       //     success: function (msg) {  
       //       console.log()          
       //       $(this).val(" ")
@@ -81,7 +62,7 @@ $(document).ready(function () {
       //       alert(error);
       //     }
       //   });
-        
+
       // }
     }
   });
@@ -98,37 +79,37 @@ $(document).ready(function () {
         $("#commentInput").prop('disabled', true);
         $.ajax({
           type: "POST", //rest Type
-          
+
           url: "/detail/comment",
           async: true,
           data: {
-            user:user,
-            content:content,
+            user: user,
+            content: content,
             movieID: movieID
           },
-          
-          success: function (msg) { 
+
+          success: function (msg) {
             $("#commentInput").prop('disabled', false);
-            $("#commentInput").blur();            
-            $('.loading').addClass("hidden")           
+            $("#commentInput").blur();
+            $('.loading').addClass("hidden")
             $("#commentInput").val("")
             let temp = $('.comment-list').html()
-            if(temp.indexOf("Hãy trở thành")> -1){
+            if (temp.indexOf("Hãy trở thành") > -1) {
               $('#noItem').remove()
-            }  
-             
-              $('.comment-list').prepend('<div data-id='+msg.data.id+' class="comment-item"><div class="author-avatar"><img src="'+user.avatar+'"></div><div class="comment-item-body"><div class="author-name">' + user.name + '</div><div class="comment-content">' + content + '</div><div class="comment-action"><span class="comment-reply"><i class="icon icon-comment"></i> trả lời</span><span class="comment-time"><i class="icon icon-time"></i> vừa xong </span><input type="text" data-id='+msg.data.id+' name="reply-input" class="reply-input hidden"/></div><div class="reply-list hidden"></div></div></div>')
-                       
-            
+            }
+
+            $('.comment-list').prepend('<div data-id=' + msg.data.id + ' class="comment-item"><div class="author-avatar"><img src="' + user.avatar + '"></div><div class="comment-item-body"><div class="author-name">' + user.name + '</div><div class="comment-content">' + content + '</div><div class="comment-action"><span class="comment-reply"><i class="icon icon-comment"></i> trả lời</span><span class="comment-time"><i class="icon icon-time"></i> vừa xong </span><input type="text" data-id=' + msg.data.id + ' name="reply-input" class="reply-input hidden"/></div><div class="reply-list hidden"></div></div></div>')
+
+
 
           },
           error: function (request, status, error) {
-            $('.loading').addClass("hidden") 
+            $('.loading').addClass("hidden")
             $("#commentInput").prop('disabled', false);
             alert(error);
           }
         });
-        
+
       }
     }
   });
@@ -163,38 +144,29 @@ $(document).ready(function () {
     }
 
   });
-  
-})
-function getCommends(movieID){
-  $('.loading').removeClass("hidden")
-  if(movieID){
-    $.ajax({
-      type: "GET", //rest Type      
-      url: "/detail/get_comments/"+movieID,
-      async: false,      
-      success: function (msg) {
-        $('.loading').addClass("hidden")            
-        if(msg.data.length>0){
-          let temp = $('.comment-list').html()
-            if(temp.indexOf("Hãy trở thành")> -1){
-              $('#noItem').remove()
-            } 
-          msg.data.forEach(element => {
-            $('.comment-list').prepend('<div data-id='+element.id+' class="comment-item"><div class="author-avatar"><img src="'+element.fromAvatar+'"></div><div class="comment-item-body"><div class="author-name">' + element.fromName + '</div><div class="comment-content">' + element.content + '</div><div class="comment-action"><span onclick="showReplyInput('+element.id+')" class="comment-reply"><i class="icon icon-comment"></i> trả lời</span><span class="comment-time"><i class="icon icon-time"></i> '+timeAgo(element.meta.updateAt)+'</span><input type="text" name="reply-input" data-id='+element.id+' class="reply-input hidden"/></div><div class="reply-list hidden"></div></div></div>')
-          });
-        }
-        
 
-      },
-      error: function (request, status, error) {
-        $('.loading').addClass("hidden")
-        $('.comment-list').append('<div id="noItem">Hãy trở thành người bình luận đầu tiên :)</div>')
-        //alert(error);
+})
+function getCommends(list) {
+  $('.loading').removeClass("hidden")
+  if (list.length > 0) {
+    setTimeout(function () {
+      $('.loading').addClass("hidden")
+      let temp = $('.comment-list').html()
+      if (temp.indexOf("Hãy trở thành") > -1) {
+        $('#noItem').remove()
       }
-    });
+      list.forEach(element => {
+        $('.comment-list').prepend('<div data-id=' + element.id + ' class="comment-item"><div class="author-avatar"><img src="' + element.fromAvatar + '"></div><div class="comment-item-body"><div class="author-name">' + element.fromName + '</div><div class="comment-content">' + element.content + '</div><div class="comment-action"><span onclick="showReplyInput(' + element.id + ')" class="comment-reply"><i class="icon icon-comment"></i> trả lời</span><span class="comment-time"><i class="icon icon-time"></i> ' + timeAgo(element.meta.updateAt) + '</span><input type="text" name="reply-input" data-id=' + element.id + ' class="reply-input hidden"/></div><div class="reply-list hidden"></div></div></div>')
+      });
+
+    }, 1500);    
+  } else {
+    $('.loading').addClass("hidden")
+    $('.comment-list').append('<div id="noItem">Hãy trở thành người bình luận đầu tiên :)</div>')
+
   }
 }
-function showReplyInput(id){
+function showReplyInput(id) {
   // tạm ẩn
   // if(id){
   //   let temp  = $('input[data-id="'+id+'"]');
@@ -230,26 +202,18 @@ function handleActivePlayer(e, video) {
   });
 }
 
-function getListEpisodes(movieID, episodesID, titleNon) {
-  $.ajax({
-    type: "GET",
-    url: '/admin/get_list_episode/' + movieID,
+function getListEpisodes(movieID, episodesID, titleNon, list) {
+  try {
+    list.forEach(element => {
+      if (element._id === episodesID)
+        $(".list-episode").append("<li class='episode' data-link=" + element.url + "><a title=" + element.name + " data-episode-id=" + element._id + " data-num='1' data-type='watch' class='btn-episode btn3d black active' href='/anime/" + titleNon + "/" + element.episodeNameNon + "'>" + element.name + "</a></li>")
+      else
+        $(".list-episode").append("<li class='episode' data-link=" + element.url + "><a title=" + element.name + " data-episode-id=" + element._id + " data-num='1' data-type='watch' class='btn-episode btn3d black' href='/anime/" + titleNon + "/" + element.episodeNameNon + "'>" + element.name + "</a></li>")
+    });
 
-    success: function (response) {
-      if (response.data.length > 0) {
-        response.data.forEach(element => {
-          if (element.episodeNameNon === episodesID)
-            $(".list-episode").append("<li class='episode' data-link=" + element.url + "><a title=" + element.name + " data-episode-id=" + element._id + " data-num='1' data-type='watch' class='btn-episode btn3d black active' href='/anime/" + titleNon + "/" + element.episodeNameNon + "'>" + element.name + "</a></li>")
-          else
-            $(".list-episode").append("<li class='episode' data-link=" + element.url + "><a title=" + element.name + " data-episode-id=" + element._id + " data-num='1' data-type='watch' class='btn-episode btn3d black' href='/anime/" + titleNon + "/" + element.episodeNameNon + "'>" + element.name + "</a></li>")
-        });
-      }
-
-    },
-    error: function (err) {
-      console.log(err)
-    }
-  });
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 function UrlExists(response) {
@@ -276,20 +240,20 @@ function timeAgo(dateCommend) {
   let date = new Date(dateCommend)
   var seconds = Math.floor((new Date() - date) / 1000);
 
-  if(Math.round(seconds/(60*60*24*365.25)) >= 1) return Math.round(seconds/(60*60*24*365.25)) + " năm trước";
-  
-  else if(Math.round(seconds/(60*60*24*30.4)) >= 1) return Math.round(seconds/(60*60*24*30.4)) + " tháng trước";
-  
-  else if(Math.round(seconds/(60*60*24*7)) >= 1) return Math.round(seconds/(60*60*24*7)) + " tuần trước";
-  
-  else if(Math.round(seconds/(60*60*24)) >= 1) return Math.round(seconds/(60*60*24)) + " ngày trước";
-  
-  else if(Math.round(seconds/(60*60)) >= 1) return Math.round(seconds/(60*60)) + " giờ trước";
-  
-  else if(Math.round(seconds/60) >= 1) return Math.round(seconds/60) + " phút trước";
-  
-  else if(seconds >= 1)return seconds + " giây trước";
-  
+  if (Math.round(seconds / (60 * 60 * 24 * 365.25)) >= 1) return Math.round(seconds / (60 * 60 * 24 * 365.25)) + " năm trước";
+
+  else if (Math.round(seconds / (60 * 60 * 24 * 30.4)) >= 1) return Math.round(seconds / (60 * 60 * 24 * 30.4)) + " tháng trước";
+
+  else if (Math.round(seconds / (60 * 60 * 24 * 7)) >= 1) return Math.round(seconds / (60 * 60 * 24 * 7)) + " tuần trước";
+
+  else if (Math.round(seconds / (60 * 60 * 24)) >= 1) return Math.round(seconds / (60 * 60 * 24)) + " ngày trước";
+
+  else if (Math.round(seconds / (60 * 60)) >= 1) return Math.round(seconds / (60 * 60)) + " giờ trước";
+
+  else if (Math.round(seconds / 60) >= 1) return Math.round(seconds / 60) + " phút trước";
+
+  else if (seconds >= 1) return seconds + " giây trước";
+
 }
 
 function onready(fn) { if (document.readyState != 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }

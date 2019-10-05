@@ -130,6 +130,8 @@ exports.detail = function (req, res) {
     let episodesID = req.params.episodesID;
     console.log("episodesID ", episodesID)
     console.log("id ", id)
+    let currentEpisole;
+    let lstEpisoles = []
     movieModel.find({ titleNon: id }, function (err, movie) {
         if (episodesID === "-1") {
             episodesModel.find({ movieID: movie[0]._id }, function (err, episodes) {
@@ -139,23 +141,51 @@ exports.detail = function (req, res) {
             })
         }
         else {
-            episodesModel.find({ episodeNameNon: episodesID }, function (err, episodes) {
-                if (episodes.length > 0) {
-                    res.render('detail', {
-                        title: 'React native',
-                        movie: movie[0],
-                        episodes: episodes[0],
-                        user: req.session.user,
+            
+            episodesModel.find({
+                "movieID": movie[0]._id
+            }, function (err, epi) {
+                if (err) {
+                    console.log(err);
+                }
+                if (epi.length > 0) {
+                    epi.forEach(episodes => {
+                        if (episodes.episodeNameNon === episodesID) {
+                            currentEpisole = episodes
+                        }
+                        lstEpisoles.push({
+                            "_id": episodes._id, name: episodes.name,
+                            episodeNameNon: episodes.episodeNameNon, movieID: episodes.movieID
+                        })
                     });
-                } else {
+                    if (currentEpisole === undefined || currentEpisole === null) {
+                        res.status(404).send({
+                            success: 'false',
+                            message: 'not found episodes',
+                            data: null
+                        })
+                    } else {
+                        commentModel.find({ movie: currentEpisole.movieID }, function (err, comments) {
+                            res.render('detail', {
+                                title: 'React native',
+                                movie: movie[0],
+                                episodes: currentEpisole,
+                                lstEpisodes:lstEpisoles,
+                                user: req.session.user,
+                                comments: comments
+                            });
+                        })
+                    }
+                }
+                else {
                     res.status(404).send({
                         success: 'false',
-                        message: 'not found',
+                        message: 'not found movie episodes',
                         data: null
                     })
                 }
-
             })
+            
             // 取到该电影的评论数据
             // res.render('detail', {
             //     title: 'React native',

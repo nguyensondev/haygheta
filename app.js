@@ -31,17 +31,17 @@ var CHUNK_SIZE = 20000000
 // mongoose 🔗
 //let dbUrl = 'mongodb://127.0.0.1:27017/movie-website';
 let dbUrl = "mongodb://admin:dqtq911184@ds255107.mlab.com:55107/haygheta"
-mongoose.connect(dbUrl, 
-    { server: { 
-        // sets how many times to try reconnecting
-        reconnectTries: Number.MAX_VALUE,
-        // sets the delay between every retry (milliseconds)
-        reconnectInterval: 1000 
-        } ,
-        useMongoClient: true
-    }
-);
-//mongoose.connect(dbUrl, { useMongoClient: true });
+// mongoose.connect(dbUrl, 
+//     { server: { 
+//         // sets how many times to try reconnecting
+//         reconnectTries: Number.MAX_VALUE,
+//         // sets the delay between every retry (milliseconds)
+//         reconnectInterval: 1000 
+//         } ,
+//         useMongoClient: true
+//     }
+// );
+mongoose.connect(dbUrl, { useMongoClient: true });
 mongoose.Promise = global.Promise;
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Mongodb connect error !'));

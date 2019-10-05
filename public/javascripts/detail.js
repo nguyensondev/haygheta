@@ -2,8 +2,16 @@ $(document).ready(function () {
   $('#player_haygheta').hide();
   var movieID = $('#movieID').val();
   var user = $('#user').val();
-  var episodesID = $('#episodesID').val();
+  var episodes = JSON.parse(($('#episodesID').val()));
+  var episodesID = episodes._id;
   var temp = $(".episode").find('a').attr('data-episode-id')
+  jwplayer("player_haygheta").setup({
+        image: episodes.urlThumnail,        
+        file: episodes.url,        
+        width: "100%",
+        aspectratio: "16:9",
+        primary: "html5"
+      })
   if (user !== "") {
     user = JSON.parse(user);    
     $("#commentInput").attr("placeholder", "Bình luận ở đây...");

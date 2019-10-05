@@ -139,13 +139,30 @@ exports.detail = function (req, res) {
             })
         }
         else {
+            episodesModel.find({ episodeNameNon: episodesID }, function (err, episodes) {
+                if (episodes.length > 0) {
+                    res.render('detail', {
+                        title: 'React native',
+                        movie: movie[0],
+                        episodes: episodes[0],
+                        user: req.session.user,
+                    });
+                } else {
+                    res.status(404).send({
+                        success: 'false',
+                        message: 'not found',
+                        data: null
+                    })
+                }
+
+            })
             // 取到该电影的评论数据
-            res.render('detail', {
-                title: 'React native',
-                movie: movie[0],
-                episodesID: episodesID,
-                user: req.session.user
-            });
+            // res.render('detail', {
+            //     title: 'React native',
+            //     movie: movie[0],
+            //     episodesID: episodesID,
+            //     user: req.session.user
+            // });
         }
 
         // episodesModel.find({ movieID: id }, function (err, episodes) {
@@ -469,7 +486,7 @@ exports.save_episodes_new = function (req, res) {
 
         res.redirect(req.get('referer'));
     });
-    
+
 
 };
 // save_episodes page - post
@@ -752,7 +769,7 @@ exports.search_movie = function (req, res) {
     let type = req.params.type;
     let searchQuery
     //res.render('search2', {movies: [], query: query});
-    
+
     if (type === "0") {
         searchQuery = {
             title: { $regex: query, $options: "i" }
@@ -762,7 +779,7 @@ exports.search_movie = function (req, res) {
             title: { $regex: query, $options: "i" },
             type: { $regex: type, $options: "i" }
         };
-    }    
+    }
     movieModel.find(searchQuery, function (err, epi) {
         if (err) {
             console.log(err);
@@ -784,7 +801,7 @@ exports.result_search_movie = function (req, res) {
     let type = req.params.type;
     let searchQuery
     //res.render('search2', {movies: [], query: query});
-    
+
     if (type === "0") {
         searchQuery = {
             title: { $regex: query, $options: "i" }
@@ -794,13 +811,13 @@ exports.result_search_movie = function (req, res) {
             title: { $regex: query, $options: "i" },
             type: { $regex: type, $options: "i" }
         };
-    }    
+    }
     movieModel.find(searchQuery, function (err, epi) {
         if (err) {
             console.log(err);
         }
         if (epi) {
-            res.render('search2', {movies: epi, query: query});
+            res.render('search2', { movies: epi, query: query });
             //console.log(epi);
             //res.render('search2', {movies: epi, query: query});
             // return res.status(200).send({

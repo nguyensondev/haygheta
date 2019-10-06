@@ -1,0 +1,16 @@
+extends ./layout
+
+block content
+    .row
+        form.form-horizontal(method="post", action="/admin/save_intro")
+            .form-group
+                label.col-sm-2.control-label(for="urlImage") Link Image Intro
+                .col-sm-10
+                    input#name.form-control(type="text", name="home[urlImage]", value=home.urlImage)
+            .form-group
+                label.col-sm-2.control-label(for="name") Link Movie
+                .col-sm-10
+                    input#name.form-control(type="text", name="home[link]", value=home.link)
+            .form-group
+                .col-sm-offset-6.col-sm-9
+                    button.btn.btn-success(type="submit") Lưu

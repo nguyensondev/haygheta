@@ -10,7 +10,7 @@ const movieController = require('../app/controller/movie');
 const userController = require('../app/controller/user');
 const commentController = require('../app/controller/comment');
 const categoryController = require('../app/controller/category');
-
+const homeController = require('../app/controller/home');
 module.exports = function (app) {
     /**
      * pre handle user
@@ -31,6 +31,8 @@ module.exports = function (app) {
     });
     //search_movie
     // index
+    app.get('/admin/add_intro', userController.user_req, userController.admin_req,homeController.add_intro);
+    app.post('/admin/save_intro', userController.user_req, userController.admin_req,homeController.save_intro);
     app.get('/', indexController.index);
     app.post('/admin/get_list_episode',  movieController.getListEpisodes);
     app.get('/admin/get_a_episode/:id',  movieController.get_a_episode);

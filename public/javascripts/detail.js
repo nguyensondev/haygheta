@@ -11,7 +11,25 @@ $(document).ready(function () {
     file: episodes.url,
     width: "100%",
     aspectratio: "16:9",
-    primary: "html5"
+    primary: "html5",
+    tracks: [{ 
+        file: "/images/tap1.srt", 
+        label: "Vietnamese",
+        kind: "captions",
+        "default": true 
+    },
+    { 
+      file: "/images/episode1.srt", 
+      label: "English",
+      kind: "captions"
+  }],
+    captions: {
+      color: "#ffffff",
+      fontFamily: "Arial",
+      fontOpacity: 90,
+      edgeStyle: "none",
+      backgroundColor: "transparent",
+    }
   })
   if (user !== "") {
     user = JSON.parse(user);

@@ -1,30 +1,39 @@
 #bs-carousel.carousel.fade-carousel.slide.carousel-fade(data-ride='carousel', data-interval='5000')
   // Overlay
   // Indicators
-  ol.carousel-indicators
+  ol.carousel-indicators    
+    //- each val, index in intro
+    //-   if (index === 0)
+    //-     li.active(data-target='#bs-carousel', data-slide-to=index.toString())
+    //-       a(target="_blank", href=val.link)
+    //-         img(src=val.urlImage alt="...")
+    //-   else
+    //-     li(data-target='#bs-carousel', data-slide-to=index.toString())
+    //-       a(target="_blank", href=val.link)
+    //-         img(src=val.urlImage alt="...")
     li.active(data-target='#bs-carousel', data-slide-to='0')
-      img(src=" /images/large/1.jpg" alt="...")
+      img(src=intro[0].urlImage alt="...")
     li(data-target='#bs-carousel', data-slide-to='1')
-      img(src=" /images/large/2.jpg" alt="...")
+      img(src=intro[1].urlImage alt="...")
     li(data-target='#bs-carousel', data-slide-to='2')
-      img(src=" /images/large/3.jpg" alt="...")
+      img(src=intro[2].urlImage alt="...")
     li(data-target='#bs-carousel', data-slide-to='3')
-      img(src=" /images/large/3.jpg" alt="...")
+      img(src=intro[3].urlImage alt="...")
       
      
 
   // Wrapper for slides
   .carousel-inner
-    .item.slides.active.carousel-item
-      .slide-1
+    .item.slides.active.carousel-item#slider1(value=intro[0].link)
+      .slide-1(style='background-image:url(' + intro[0].urlImage + ')')
         .overlay
-    .item.slides.carousel-item
-      .slide-2
+    .item.slides.carousel-item#slider2(value=intro[1].link)
+      .slide-2(style='background-image:url(' + intro[1].urlImage + ')')
         .overlay
-    .item.slides.carousel-item
-      .slide-3
+    .item.slides.carousel-item#slider3(value=intro[2].link)
+      .slide-3(style='background-image:url(' + intro[2].urlImage + ')')
         .overlay
-    .item.slides.carousel-item
-      .slide-4
+    .item.slides.carousel-item#slider4(value=intro[3].link)
+      .slide-4(style='background-image:url(' + intro[3].urlImage + ')')
         .overlay         
       

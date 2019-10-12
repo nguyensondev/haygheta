@@ -1,6 +1,18 @@
 // 处理删除电影数据的逻辑
 
 $(function () {
+  $('#slider1').click(function (event) {
+    window.location.href = this.getAttribute("value"); 
+  });
+  $('#slider2').click(function (event) {
+    window.location.href = this.getAttribute("value"); 
+  }); 
+  $('#slider3').click(function (event) {
+    window.location.href = this.getAttribute("value"); 
+  }); 
+  $('#slider4').click(function (event) {
+    window.location.href = this.getAttribute("value"); 
+  });  
   $(".dropdown-menu li a").click(function () {
     var selText = $(this).text().substring(0, $(this).text().length - 1);;
     $("#txtTypeID").html($(this).find('span').text())

@@ -8,7 +8,7 @@
 /**
  * 处理首页控制逻辑
  */
-
+const homeModel = require('../model/mongoose/model/homeModel');
 const movieModel = require('../model/mongoose/model/movieModel');
 const groupModel = require('../model/mongoose/model/groupModel');
 const typeModel = require('../model/mongoose/model/typeModel');
@@ -32,12 +32,19 @@ exports.index = function (req, res) {
                     console.log(err);
                 }
 
-                res.render('index', {
-                    title: 'Hay Ghê Ta',
-                    movies: movies,
-                    groups: groups,
-                    types: types,
-                    userCurrent: req.session.user
+                homeModel.findAll(function (err, intro) {
+                    if (err) {
+                        console.log(err);
+                    }
+    
+                    res.render('index', {
+                        title: 'Hay Ghê Ta',
+                        movies: movies,
+                        groups: groups,
+                        types: types,
+                        userCurrent: req.session.user,
+                        intro:intro
+                    });
                 });
             });
 

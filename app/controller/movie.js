@@ -8,6 +8,7 @@
 /**
  * 处理电影控制逻辑
  */
+const fs = require('fs');
 // var request = require('request');
 var formidable = require('formidable');
 const movieModel = require('../model/mongoose/model/movieModel');
@@ -24,6 +25,7 @@ const ol = openload({
     api_login: "25c363bb39ee91f2",
     api_key: "UmUrpthb",
 });
+const { StreamangoScraper } = require('streamango-scraper');
 
 exports.getListEpisodes = function (req, res) {
     episodesModel.find({ movieID: req.params.movieID }, function (err, episodes) {
@@ -87,6 +89,59 @@ function getEpisode(episodes, res) {
         }
     })
 }
+async function updateEpisode(obj, red, res) {
+
+    const url = obj.urlOthers
+    console.log(url)
+    const scrap = await new StreamangoScraper().scrap(url);
+    if (scrap.success) {
+        //console.log(scrap.data.sources[0].url)
+        request({ method: 'HEAD', uri: scrap.data.sources[0].url }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                //console.log(response.toJSON().request.uri.href)
+                obj.url = response.toJSON().request.uri.href
+                obj.save(function (err, epi) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    red.episodes = obj
+                    res.render('detail', red);
+
+                })
+
+            } else {
+                console.log("link da vo phuong cuu chua ")
+
+
+            }
+        })
+    }
+    console.log(scrap.data.sources);
+    //    const scraper = scrapers.all.getFirstApplicable(url);
+    //    const scrap = await scraper.scrap(url);
+    //    if (scrap.success)
+    //        console.log(scrap.data);
+};
+function checkAndRefresh(episodes) {
+    try {
+        let temp = false
+        request({ method: 'HEAD', uri: episodes.url }, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log("link con song")
+                temp = true
+            } else {
+                console.log("link da chet ")
+                temp = false
+
+            }
+        })
+        return temp
+    } catch (error) {
+        console.log("link da loi ")
+        return false
+    }
+}
+
 
 exports.get_a_episode = function (req, res) {
     if (req.params.id === "-1") {
@@ -135,13 +190,16 @@ exports.detail = function (req, res) {
     movieModel.find({ titleNon: id }, function (err, movie) {
         if (episodesID === "-1") {
             episodesModel.find({ movieID: movie[0]._id }, function (err, episodes) {
-                res.redirect(url.format({
-                    pathname: "/anime/" + movie[0].titleNon + "/" + episodes[0].episodeNameNon,
-                }));
+                
+                    res.redirect(url.format({
+                        pathname: "/anime/" + movie[0].titleNon + "/" + episodes[0].episodeNameNon,
+                    }));
+               
+
             })
         }
         else {
-            
+
             episodesModel.find({
                 "movieID": movie[0]._id
             }, function (err, epi) {
@@ -149,6 +207,7 @@ exports.detail = function (req, res) {
                     console.log(err);
                 }
                 if (epi.length > 0) {
+
                     epi.forEach(episodes => {
                         if (episodes.episodeNameNon === episodesID) {
                             currentEpisole = episodes
@@ -165,17 +224,38 @@ exports.detail = function (req, res) {
                             data: null
                         })
                     } else {
+                        console.log(currentEpisole)
                         commentModel.find({ movie: currentEpisole.movieID }, function (err, comments) {
-                            res.render('detail', {
-                                title: currentEpisole.episodeName + "/"+movie[0].title,
-                                movie: movie[0],
-                                episodes: currentEpisole,
-                                lstEpisodes:lstEpisoles,
-                                user: req.session.user,
-                                comments: comments
-                            });
+                            request({ method: 'HEAD', uri: currentEpisole.url }, function (error, response, body) {
+                                if (!error && response.statusCode == 200) {
+                                    console.log("link con song")
+                                    res.render('detail', {
+                                        title: currentEpisole.episodeName + "/" + movie[0].title,
+                                        movie: movie[0],
+                                        episodes: currentEpisole,
+                                        lstEpisodes: lstEpisoles,
+                                        user: req.session.user,
+                                        comments: comments
+                                    });
+                                } else {
+                                    console.log("link da chet ")
+                                    updateEpisode(currentEpisole,
+                                    {
+                                        title: currentEpisole.episodeName + "/" + movie[0].title,
+                                        movie: movie[0],                                        
+                                        lstEpisodes: lstEpisoles,
+                                        user: req.session.user,
+                                        comments: comments
+                                    },res)
+                    
+                                }
+                            })
+                           
                         })
+
                     }
+
+
                 }
                 else {
                     res.status(404).send({
@@ -185,7 +265,7 @@ exports.detail = function (req, res) {
                     })
                 }
             })
-            
+
             // 取到该电影的评论数据
             // res.render('detail', {
             //     title: 'React native',

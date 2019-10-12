@@ -13,13 +13,13 @@ $(document).ready(function () {
     aspectratio: "16:9",
     primary: "html5",
     tracks: [{ 
-        file: "/images/tap1.srt", 
+        file: episodes.vietSub, 
         label: "Vietnamese",
         kind: "captions",
         "default": true 
     },
     { 
-      file: "/images/episode1.srt", 
+      file: episodes.engSub, 
       label: "English",
       kind: "captions"
   }],

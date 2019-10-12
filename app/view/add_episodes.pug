@@ -44,7 +44,21 @@ block content
                             if _episodes !== undefined
                                 input#inputSummary.form-control(type="text", name="episodes[urlOthers]", value=_episodes.urlOthers)
                             else  
-                                input#inputSummary.form-control(type="text", name="episodes[urlOthers]", value="")           
+                                input#inputSummary.form-control(type="text", name="episodes[urlOthers]", value="") 
+                    .form-group
+                        label.col-sm-2.control-label(for="inputSummary") Link VietSub
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputSummary.form-control(type="text", name="episodes[vietSub]", value=_episodes.vietSub)
+                            else  
+                                input#inputSummary.form-control(type="text", name="episodes[vietSub]", value="") 
+                    .form-group
+                        label.col-sm-2.control-label(for="inputSummary") Link EngSub
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputSummary.form-control(type="text", name="episodes[engSub]", value=_episodes.engSub)
+                            else  
+                                input#inputSummary.form-control(type="text", name="episodes[engSub]", value="")          
                     if _episodes !== undefined
                         .form-group
                             label.col-sm-2.control-label(for="inputCapcha") Capcha

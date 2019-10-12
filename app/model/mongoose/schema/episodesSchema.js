@@ -22,6 +22,8 @@ let episodesSchema = new mongoose.Schema({
     view: {type: Number},
     videoID: {type: String},
     videoTicket: {type: String},
+    vietSub: {type: String},
+    engSub: {type: String},
     meta: {
         createAt: {
             type: Date,

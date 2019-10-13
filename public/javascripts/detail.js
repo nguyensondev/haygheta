@@ -6,31 +6,31 @@ $(document).ready(function () {
   var lstEpisodes = JSON.parse(($('#lstEpisodes').val()));
   var comments = JSON.parse(($('#comments').val()));
   var temp = $(".episode").find('a').attr('data-episode-id')
-  jwplayer("player_haygheta").setup({
-    image: episodes.urlThumnail,
-    file: episodes.url,
-    width: "100%",
-    aspectratio: "16:9",
-    primary: "html5",
-    tracks: [{ 
-        file: episodes.vietSub, 
-        label: "Vietnamese",
-        kind: "captions",
-        "default": true 
-    },
-    { 
-      file: episodes.engSub, 
-      label: "English",
-      kind: "captions"
-  }],
-    captions: {
-      color: "#ffffff",
-      fontFamily: "Arial",
-      fontOpacity: 90,
-      edgeStyle: "none",
-      backgroundColor: "transparent",
-    }
-  })
+  // jwplayer("player_haygheta").setup({
+  //   image: episodes.urlThumnail,
+  //   file: episodes.url,
+  //   width: "100%",
+  //   aspectratio: "16:9",
+  //   primary: "html5",
+  //   tracks: [{ 
+  //       file: episodes, 
+  //       label: "Vietnamese",
+  //       kind: "captions",
+  //       "default": true 
+  //   },
+  //   { 
+  //     file: "/images/episode1.srt", 
+  //     label: "English",
+  //     kind: "captions"
+  // }],
+  //   captions: {
+  //     color: "#ffffff",
+  //     fontFamily: "Arial",
+  //     fontOpacity: 90,
+  //     edgeStyle: "none",
+  //     backgroundColor: "transparent",
+  //   }
+  // })
   if (user !== "") {
     user = JSON.parse(user);
     $("#commentInput").attr("placeholder", "Bình luận ở đây...");

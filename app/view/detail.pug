@@ -12,8 +12,18 @@ block content
         .col-md-8
             #contentPlayer(style="width:auto;height:389px;background-size: 100% auto;background-repeat:no-repeat;background-position: center center;background-color: black;")              
               //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")           
-              #player_haygheta
-              
+              //-#player_haygheta
+              video#video(controls='' preload='metadata' width="auto" height="389px"  poster=""+episodes.urlThumnail)
+                source(src=""+episodes.url type='video/mp4')
+                track(label='Tiếng Việt' kind='subtitles' srclang='vi' src=episodes.vietSub  default='')
+                track(label='English' kind='subtitles' srclang='en' src=episodes.engSub)
+              //- <video id="dotsub_example" class="video-js vjs-default-skin" width="640" height="264"  poster=""+episodes.urlThumnail controls preload="auto" data-setup='[]'>
+              //-   <source src=""+episodes.url type='video/mp4' />                
+              //-   <track kind='captions' src=''+episodes.engSub srclang='zh' label='Chinese' default />
+              //-   <track kind='captions' src=''+episodes.engSub srclang='en' label='English' />
+              //-   <track kind='captions' src=''+episodes.engSub srclang='es' label='Spanish' />
+              //-   <track kind='captions' src=''+episodes.engSub srclang='fr' label='French' />
+              //- </video>
 
                 
             //- 评论
@@ -61,8 +71,8 @@ block content
                 <span id="comment-emoticon" class="comment-emoticon icon-smile"></span>
                 <div id="emoji-picker" class="emoji-picker hidden">
                     <div class="emoji-picker-header">
-                        <div class="emoji-picker-type" data-tab="panda"><img src="panda.gif"></div>
-                        <div class="emoji-picker-type" data-tab="onion"><img src="onion.gif"></div>
+                        //- <div class="emoji-picker-type" data-tab="panda"><img src="panda.gif"></div>
+                        //- <div class="emoji-picker-type" data-tab="onion"><img src="onion.gif"></div>
                         <div class="emoji-close"><i class="icon-close"></i></div>
                     </div>
                     <div class="emoji-picker-body">

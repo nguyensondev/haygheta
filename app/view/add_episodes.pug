@@ -58,7 +58,14 @@ block content
                             if _episodes !== undefined
                                 input#inputSummary.form-control(type="text", name="episodes[engSub]", value=_episodes.engSub)
                             else  
-                                input#inputSummary.form-control(type="text", name="episodes[engSub]", value="")          
+                                input#inputSummary.form-control(type="text", name="episodes[engSub]", value="") 
+                    .form-group
+                        label.col-sm-2.control-label(for="inputSummary") Link JanSub
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputSummary.form-control(type="text", name="episodes[japSub]", value=_episodes.japSub)
+                            else  
+                                input#inputSummary.form-control(type="text", name="episodes[japSub]", value="")          
                     if _episodes !== undefined
                         .form-group
                             label.col-sm-2.control-label(for="inputCapcha") Capcha

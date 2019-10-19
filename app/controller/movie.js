@@ -167,7 +167,7 @@ exports.detail = function (req, res) {
                             data: null
                         })
                     } else {
-                        request("https://api.pcloud.com/getpubvideolinks?code="+currentEpisole.url+"&linkpassword=undefined", function (error, response, body) {
+                        request("https://api.pcloud.com/getpubvideolinks?code=zs1ctalK&linkpassword=S0ndieu@", function (error, response, body) {
                             if (!error && response.statusCode == 200) {
                                 const link = JSON.parse(body).variants[0]
                                 console.log(JSON.parse(body).variants[0].path) // Print the google web page.

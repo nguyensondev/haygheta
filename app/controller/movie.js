@@ -167,25 +167,17 @@ exports.detail = function (req, res) {
                             data: null
                         })
                     } else {
-                        request("https://api.pcloud.com/getpubvideolinks?code=zs1ctalK&linkpassword=S0ndieu@", function (error, response, body) {
-                            if (!error && response.statusCode == 200) {
-                                const link = JSON.parse(body).variants[0]
-                                console.log(JSON.parse(body).variants[0].path) // Print the google web page.
-                                currentEpisole.url = "https://"+link.hosts[0]+link.path
-                                console.log(currentEpisole.url) 
-                                commentModel.find({ movie: currentEpisole.movieID }, function (err, comments) {
-                                    res.render('detail', {
-                                        title: currentEpisole.episodeName + "/" + movie[0].title,
-                                        movie: movie[0],
-                                        episodes: currentEpisole,
-                                        lstEpisodes: lstEpisoles,
-                                        user: req.session.user,
-                                        comments: comments
-                                    });
-                                })
-                            }
-                        })
                         
+                        commentModel.find({ movie: currentEpisole.movieID }, function (err, comments) {
+                            res.render('detail', {
+                                title: currentEpisole.episodeName + "/" + movie[0].title,
+                                movie: movie[0],
+                                episodes: currentEpisole,
+                                lstEpisodes: lstEpisoles,
+                                user: req.session.user,
+                                comments: comments
+                            });
+                        })
                     }
                 }
                 else {

@@ -164,6 +164,38 @@ $(document).ready(function () {
   });
 
 })
+function getGenarate(id){
+  $.ajax({
+    type: "POST", //rest Type
+
+    url: "/detail/comment",
+    async: true,
+    data: {
+      user: user,
+      content: content,
+      movieID: movieID
+    },
+
+    success: function (msg) {
+      $("#commentInput").prop('disabled', false);
+      $("#commentInput").blur();
+      $('.loading').addClass("hidden")
+      $("#commentInput").val("")
+      let temp = $('.comment-list').html()
+      if (temp.indexOf("Hãy trở thành") > -1) {
+        $('#noItem').remove()
+      }
+
+      $('.comment-list').prepend('<div data-id=' + msg.data.id + ' class="comment-item"><div class="author-avatar"><img src="' + user.avatar + '"></div><div class="comment-item-body"><div class="author-name">' + user.name + '</div><div class="comment-content">' + content + '</div><div class="comment-action"><span class="comment-reply"><i class="icon icon-comment"></i> trả lời</span><span class="comment-time"><i class="icon icon-time"></i> vừa xong </span><input type="text" data-id=' + msg.data.id + ' name="reply-input" class="reply-input hidden"/></div><div class="reply-list hidden"></div></div></div>')
+
+
+
+    },
+    error: function (request, status, error) {
+      console.log(error)
+    }
+  });
+}
 function getCommends(list) {
   $('.loading').removeClass("hidden")
   if (list.length > 0) {

@@ -9,6 +9,7 @@
  * 处理电影控制逻辑
  */
 var request = require('request');
+const queryString = require('query-string');
 var formidable = require('formidable');
 const movieModel = require('../model/mongoose/model/movieModel');
 const categoryModel = require('../model/mongoose/model/categoryModel');
@@ -16,9 +17,10 @@ const episodesModel = require('../model/mongoose/model/episodesModel');
 const commentModel = require('../model/mongoose/model/commentModel');
 const groupModel = require('../model/mongoose/model/groupModel');
 const typeModel = require('../model/mongoose/model/typeModel');
+const cheerio = require('cheerio');
 const _ = require('underscore');
 const url = require('url');
-var request = require('request');
+
 const openload = require('node-openload');
 const ol = openload({
     api_login: "25c363bb39ee91f2",
@@ -122,7 +124,20 @@ exports.get_list_episode = function (req, res) {
     })
 
 }
-
+function Crawlers(url)
+{
+    console.log(url)
+    //Gửi 1 request tới website
+    request(url, function (err, res, body) 
+    {
+        //  Sử dụng cheerio.load để lấy dữ liệu trả về
+        const $ = cheerio.load(body)
+        //const link = $(this).find('title').text()
+        var temp = $.html().split("url\\u003d")
+        var link = JSON.stringify(queryString.parse(temp[1])).split("\\")[0]
+        return link.substring(2,link.length)        
+    })
+}
 // GET detail page.
 exports.detail = function (req, res) {
     // 取到 url '/detail/:id' 中的 id
@@ -169,6 +184,7 @@ exports.detail = function (req, res) {
                     } else {
                         
                         commentModel.find({ movie: currentEpisole.movieID }, function (err, comments) {
+                            
                             res.render('detail', {
                                 title: currentEpisole.episodeName + "/" + movie[0].title,
                                 movie: movie[0],
@@ -511,14 +527,30 @@ exports.save_episodes_new = function (req, res) {
     // let array = temp.toString().split(',')
     // _episodes["url"] = array
     let episodes = new episodesModel(_episodes);
-
-    episodes.save(function (err, epi) {
-        if (err) {
-            console.log(err);
+    request(episodes.url, function (err, ress, body) 
+    {
+        //  Sử dụng cheerio.load để lấy dữ liệu trả về
+        if(body!==undefined){
+            const $ = cheerio.load(body)
+            //const link = $(this).find('title').text()
+            var temp = $.html().split("url\\u003d")
+            var link = JSON.stringify(queryString.parse(temp[1])).split("\\")[0]
+            episodes.url = link.substring(2,link.length)
+            episodes.save(function (err, epi) {
+                if (err) {
+                    console.log(err);
+                }
+        
+                res.redirect(req.get('referer'));
+            });
         }
-
-        res.redirect(req.get('referer'));
-    });
+                
+    })
+    
+    // if(temp.indexOf("photos.google.com")){
+    //     episodes.url = Crawlers(temp)
+    // }
+   
 
 
 };

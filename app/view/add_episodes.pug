@@ -17,12 +17,26 @@ block content
                 form.form-horizontal(method="post", action="/admin/save_episodes")
                     input(type="hidden", name="episodes[movieID]", value=id)
                     .form-group
-                        label.col-sm-2.control-label(for="inputTitle") Tên tập
+                        label.col-sm-2.control-label(for="inputTitle") Tập thứ
                         .col-sm-10
                             if _episodes !== undefined
                                 input#inputTitle.form-control(type="text", name="episodes[name]", value=_episodes.name)
                             else  
                                 input#inputTitle.form-control(type="text", name="episodes[name]", value="")
+                    .form-group
+                        label.col-sm-2.control-label(for="inputTitle") Tên tập
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputTitle.form-control(type="text", name="episodes[episodeName]", value=_episodes.episodeName)
+                            else  
+                                input#inputTitle.form-control(type="text", name="episodes[episodeName]", value="")
+                    .form-group
+                        label.col-sm-2.control-label(for="inputTitle") Ảnh đại diện
+                        .col-sm-10
+                            if _episodes !== undefined
+                                input#inputTitle.form-control(type="text", name="episodes[urlThumnail]", value=_episodes.urlThumnail)
+                            else  
+                                input#inputTitle.form-control(type="text", name="episodes[urlThumnail]", value="")
                                         
                     .form-group
                         label.col-sm-2.control-label(for="inputSummary") Url
@@ -71,7 +85,7 @@ block content
                             label.col-sm-2.control-label(for="inputCapcha") Capcha
                             .col-sm-10
                                 img#imgCapcha(src=_episodes.capcha)
-                                input#inputCapcha.form-control(type="text", name="episodes[capcha]", value="") 
+                                input#inputCapcha.form-control(type="text", name="episodes[capcha]", value="")                                                 
                     .form-group
                         .col-sm-offset-6.col-sm-9
                             if _episodes !== undefined

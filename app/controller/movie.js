@@ -526,7 +526,11 @@ exports.save_episodes_new = function (req, res) {
     // let temp = _episodes.url.replace(/\s/g, '')
     // let array = temp.toString().split(',')
     // _episodes["url"] = array
+    let name = remove_unicode(_episodes.name.replace(new RegExp(" ", 'g'), "-"))
+    let episodeName = remove_unicode(_episodes.episodeName.replace(new RegExp(" ", 'g'), "-"))
+    _episodes.episodeNameNon = (name + "-" + episodeName).replace(/\s/g, "_")
     let episodes = new episodesModel(_episodes);
+
     request(episodes.url, function (err, ress, body) 
     {
         //  Sử dụng cheerio.load để lấy dữ liệu trả về

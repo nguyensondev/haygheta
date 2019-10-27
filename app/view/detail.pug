@@ -13,7 +13,7 @@ block content
             #contentPlayer(style="width:auto;height:389px;background-size: 100% auto;background-repeat:no-repeat;background-position: center center;background-color: black;")              
               //-embed(src=movie.flash, allowFullScreen="true", quality="high", width="720", height="600", align="middle" type="application/x-shockwave-flash")           
               //-#player_haygheta
-              video#video(controls='' preload='metadata' width="auto" height="389px"  poster=""+episodes.urlThumnail)
+              video#video(controls='' autoplay preload='metadata' width="auto" height="389px"  poster=""+episodes.urlThumnail)
                 source(src=""+episodes.url type='video/mp4')
                 track(label='Tiếng Việt' kind='subtitles' srclang='vi' src=episodes.vietSub  default='')
                 track(label='English' kind='subtitles' srclang='en' src=episodes.engSub)

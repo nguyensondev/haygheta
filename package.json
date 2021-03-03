@@ -29,7 +29,7 @@
     "morgan": "^1.8.2",
     "node-openload": "^2.2.0",
     "nodemon": "^1.19.4",
-    "pug": "^2.0.0-rc.2",
+    "pug": "^3.0.1",
     "query-string": "^6.8.3",
     "request": "^2.88.0",
     "serve-favicon": "~2.4.2",

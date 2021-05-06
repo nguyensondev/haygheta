@@ -33,7 +33,7 @@
     "query-string": "^6.8.3",
     "request": "^2.88.0",
     "serve-favicon": "~2.4.2",
-    "underscore": "^1.8.3"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
